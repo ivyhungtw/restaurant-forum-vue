@@ -3,6 +3,8 @@
     <!-- Nav Tab -->
     <nav-tabs />
 
+    <restaurant-nav-pills :categories="categories" />
+
     <!-- Nav Pills -->
     <div class="row">
       <!-- Restaurant Card -->
@@ -20,6 +22,7 @@
 <script>
 import NavTabs from '../components/NavTabs.vue';
 import RestaurantCard from '../components/RestaurantCard.vue';
+import RestaurantNavPills from '../components/RestaurantNavPills.vue';
 
 const dummyData = {
   restaurants: [
@@ -310,7 +313,8 @@ export default {
   },
   components: {
     NavTabs,
-    RestaurantCard
+    RestaurantCard,
+    RestaurantNavPills
   },
   methods: {
     fetchRestaurants() {
