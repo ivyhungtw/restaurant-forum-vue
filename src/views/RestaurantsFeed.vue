@@ -15,6 +15,7 @@
       <!-- Latest Comments-->
       <div class="col-md-6">
         <h3>Latest Comments</h3>
+        <latest-comments :comments="comments" />
       </div>
     </div>
   </div>
@@ -22,7 +23,8 @@
 
 <script>
 import NavTabs from '../components/NavTabs.vue';
-import LatestRestaurants from '../components/LatestRestaurant.vue';
+import LatestRestaurants from '../components/LatestRestaurants.vue';
+import LatestComments from '../components/LatestComments.vue';
 
 const dummyData = {
   restaurants: [
@@ -548,7 +550,8 @@ export default {
   },
   components: {
     NavTabs,
-    LatestRestaurants
+    LatestRestaurants,
+    LatestComments
   },
   methods: {
     fetchFeed() {

@@ -1,0 +1,36 @@
+<template>
+  <div class="card">
+    <div class="card-header">
+      最新評論
+    </div>
+    <div class="card-body">
+      <div v-for="comment in comments" :key="comment.id">
+        <template v-if="comment.Restaurant && comment.text">
+          <h4>
+            <a href="#">
+              {{ comment.Restaurant.name }}
+            </a>
+          </h4>
+          <p>{{ comment.text }}</p>
+          by
+          <a href="#">
+            {{ comment.User.name }}
+          </a>
+          {{ $filter.fromNow(comment.createdAt) }}
+          <hr />
+        </template>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    comments: {
+      type: Array,
+      required: true
+    }
+  }
+};
+</script>
