@@ -12,7 +12,7 @@
         <p>
           {{ restaurant.description }}
         </p>
-        {{ restaurant.createdAt }}
+        {{ $filter.fromNow(restaurant.createdAt) }}
         <hr />
       </div>
     </div>
