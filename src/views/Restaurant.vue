@@ -2,6 +2,7 @@
   <div class="container py-5">
     <h1>餐廳描述頁</h1>
     <!-- RestaurantDetail -->
+    <restaurant-detail :initial-restaurant="restaurant" />
     <hr />
     <!-- RestaurantComments -->
     <!-- CreateComment -->
@@ -9,6 +10,8 @@
 </template>
 
 <script>
+import RestaurantDetail from '../components/RestaurantDetail.vue';
+
 const dummyData = {
   restaurant: {
     id: 1044,
@@ -71,6 +74,9 @@ export default {
       },
       restaurantComments: []
     };
+  },
+  components: {
+    RestaurantDetail
   },
   methods: {
     fetchRestaurant(restaurantId) {
