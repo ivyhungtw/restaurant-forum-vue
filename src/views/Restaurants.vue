@@ -16,6 +16,14 @@
     </div>
 
     <!-- Pagination -->
+    <restaurant-pagination
+      v-if="totalPage.length > 1"
+      :current-page="currentPage"
+      :total-page="totalPage"
+      :next="next"
+      :prev="prev"
+      :category-id="categoryId"
+    />
   </div>
 </template>
 
@@ -23,6 +31,7 @@
 import NavTabs from '../components/NavTabs.vue';
 import RestaurantCard from '../components/RestaurantCard.vue';
 import RestaurantNavPills from '../components/RestaurantNavPills.vue';
+import RestaurantPagination from '../components/RestaurantPagination.vue';
 
 const dummyData = {
   restaurants: [
@@ -314,7 +323,8 @@ export default {
   components: {
     NavTabs,
     RestaurantCard,
-    RestaurantNavPills
+    RestaurantNavPills,
+    RestaurantPagination
   },
   methods: {
     fetchRestaurants() {
@@ -322,7 +332,7 @@ export default {
       this.restaurants = restaurants;
       this.categories = categories;
       this.categoryId = categoryId;
-      this.page = page;
+      this.currentPage = page;
       this.totalPage = totalPage;
       this.prev = prev;
       this.next = next;
