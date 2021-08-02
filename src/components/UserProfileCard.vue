@@ -1,6 +1,9 @@
 <template>
   <div class="col-12 col-md-6 col-lg-4">
-    <img :src="userProfile.image" style="width: 250px;margin-bottom: 25px;" />
+    <img
+      :src="$filter.emptyImageFilter(userProfile.image)"
+      style="width: 250px;margin-bottom: 25px;"
+    />
   </div>
   <div class="col-12 col-md-6 col-lg-8 d-flex flex-column justify-content-between pt-4 pb-5">
     <div class="mb-3">

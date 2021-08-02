@@ -3,7 +3,7 @@
     <div class="row no-gutters">
       <div class="col-md-4">
         <a href="#">
-          <img class="card-img" :src="restaurant.image" />
+          <img class="card-img" :src="$filter.emptyImageFilter(restaurant.image)" />
         </a>
       </div>
       <div class="col-md-8">

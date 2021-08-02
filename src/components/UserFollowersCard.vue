@@ -13,7 +13,10 @@
       <div class="col-12 p-4 d-flex flex-wrap" style="background-color: white;">
         <div v-for="follower in followers" :key="follower.id" class="mb-2 me-2">
           <router-link :to="{ name: 'user-profile', params: { id: follower.id } }">
-            <img :src="follower.image" style="width: 60px; height: 60px;" />
+            <img
+              :src="$filter.emptyImageFilter(follower.image)"
+              style="width: 60px; height: 60px;"
+            />
           </router-link>
         </div>
       </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="col-3">
     <a href="#">
-      <img :src="user.image" />
+      <img :src="$filter.emptyImageFilter(user.image)" />
     </a>
     <h2>{{ user.name }}</h2>
     <span class="badge bg-secondary">followers：{{ user.FollowerCount }}</span>

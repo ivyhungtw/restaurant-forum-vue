@@ -1,7 +1,11 @@
 <template>
   <div class="col-md-6 col-lg-4">
     <div class="card mb-4">
-      <img class="card-img-top" :src="restaurant.image" alt="Card image cap" />
+      <img
+        class="card-img-top"
+        :src="$filter.emptyImageFilter(restaurant.image)"
+        alt="Card image cap"
+      />
       <div class="card-body">
         <p class="card-text title-wrap">
           <router-link :to="{ name: 'restaurant', params: { id: restaurant.id } }">
