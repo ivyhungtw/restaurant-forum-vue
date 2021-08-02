@@ -24,7 +24,11 @@
         <td>{{ restaurant.Category ? restaurant.Category.name : 'uncategorized' }}</td>
         <td>{{ restaurant.name }}</td>
         <td class="d-flex justify-content-between">
-          <a href="#" class="btn btn-link">Detail</a>
+          <router-link
+            :to="{ name: 'admin-restaurant', params: { id: restaurant.id } }"
+            class="btn btn-link"
+            >Detail</router-link
+          >
 
           <a href="#" class="btn btn-link">Edit</a>
 

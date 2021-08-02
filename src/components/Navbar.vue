@@ -23,7 +23,11 @@
           <template v-if="isAuthenticated">
             <!-- is user is admin -->
             <li class="nav-item me-3" v-if="currentUser.isAdmin">
-              <router-link class="nav-link active" aria-current="page" to="#">
+              <router-link
+                class="nav-link active"
+                aria-current="page"
+                :to="{ name: 'admin-restaurants' }"
+              >
                 ADMIN
               </router-link>
             </li>
@@ -59,7 +63,7 @@ const dummyUser = {
     name: '管理者',
     email: 'root@example.com',
     image: 'https://i.pravatar.cc/300',
-    isAdmin: false
+    isAdmin: true
   },
   isAuthenticated: true
 };
