@@ -3,9 +3,9 @@
     <!-- 後台導覽頁籤 AdminNav -->
     <admin-nav />
 
-    <a href="#" class="btn btn-primary mb-4">
+    <router-link :to="{ name: 'admin-restaurant-new' }" class="btn btn-primary mb-4">
       New Restaurant
-    </a>
+    </router-link>
 
     <!-- 後台餐廳列表 AdminRestaurantsTable -->
     <admin-restaurants-table />
