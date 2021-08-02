@@ -23,7 +23,11 @@
       </div>
     </div>
     <div v-if="currentUserId === userProfile.id">
-      <a href="/users/{{userProfile.id}}/edit" class="btn btn-primary">edit</a>
+      <router-link
+        :to="{ name: 'user-profile-edit', params: { id: currentUserId } }"
+        class="btn btn-primary"
+        >edit</router-link
+      >
     </div>
   </div>
 </template>
