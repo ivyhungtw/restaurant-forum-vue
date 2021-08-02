@@ -7,6 +7,7 @@
     <div class="row"></div>
     <div class="row">
       <!-- User Followings Card  -->
+      <user-followings-card :followings="followings" :current-user-id="currentUserId" />
 
       <!-- User Comments Card  -->
     </div>
@@ -20,6 +21,7 @@
 
 <script>
 import UserProfileCard from '../components/UserProfileCard.vue';
+import UserFollowingsCard from '../components/UserFollowingsCard.vue';
 
 const dummyData = {
   userProfile: {
@@ -59,7 +61,18 @@ const dummyData = {
       }
     }
   ],
-  followings: [],
+  followings: [
+    {
+      id: 34,
+      image: 'https://i.imgur.com/1jDf2Me.png',
+      Followship: {
+        followerId: 34,
+        followingId: 44,
+        createdAt: '2021-04-09T10:39:50.000Z',
+        updatedAt: '2021-04-09T10:39:50.000Z'
+      }
+    }
+  ],
   favRestaurants: [
     {
       id: 1114,
@@ -96,7 +109,8 @@ export default {
     };
   },
   components: {
-    UserProfileCard
+    UserProfileCard,
+    UserFollowingsCard
   },
   methods: {
     fetchUser(userId) {
