@@ -5,51 +5,56 @@
     <restaurant-detail :initial-restaurant="restaurant" />
     <hr />
     <!-- RestaurantComments -->
+    <restaurant-comments :restaurant-comments="restaurantComments" />
     <!-- CreateComment -->
   </div>
 </template>
 
 <script>
 import RestaurantDetail from '../components/RestaurantDetail.vue';
+import RestaurantComments from '../components/RestaurantComments.vue';
 
 const dummyData = {
   restaurant: {
-    id: 1044,
-    name: 'Julie Shields',
-    tel: '(512) 826-6762 x6317',
-    address: '2913 Otho Drive',
+    id: 1064,
+    name: 'Maureen Gleason',
+    tel: '461.213.9121 x28975',
+    address: '57170 Gaylord Dale',
     opening_hours: '08:00',
-    description: 'A perferendis voluptas error accusantium veritatis.',
-    image: 'https://loremflickr.com/320/240/restaurant,food?lock=8',
+    description:
+      'Voluptates rem officia non. Qui ipsum minus sint iusto. Quaerat id quo rem harum nulla fuga vel ea et.',
+    image: 'https://loremflickr.com/320/240/restaurant,food?lock=504',
     CategoryId: 41,
-    viewCounts: 12,
+    viewCounts: 5,
     createdAt: '2021-04-06T18:12:12.000Z',
-    updatedAt: '2021-08-01T21:40:26.000Z',
+    updatedAt: '2021-08-02T01:19:52.520Z',
     Category: {
       id: 41,
       name: '素食料理',
       createdAt: '2021-04-06T00:18:27.000Z',
       updatedAt: '2021-04-06T00:18:27.000Z'
     },
-    Comments: [],
-    FavoritedUsers: [
+    Comments: [
       {
-        id: 34,
-        name: 'root',
-        email: 'root@example.com',
-        password: '$2a$10$n8fVa5HYfOCLOiTpnZa8nuoNA1U.haz6W9jVk2W.D6D48obCHfiJu',
-        isAdmin: true,
-        image: 'https://i.imgur.com/1jDf2Me.png',
-        createdAt: '2021-04-06T00:19:36.000Z',
-        updatedAt: '2021-04-17T19:31:04.000Z',
-        Favorite: {
-          UserId: 34,
-          RestaurantId: 1044,
-          createdAt: '2021-04-11T14:06:34.000Z',
-          updatedAt: '2021-04-11T14:06:34.000Z'
+        id: 11,
+        text: 'Quos quia qui libero',
+        UserId: 54,
+        RestaurantId: 1064,
+        createdAt: '2021-04-06T18:14:41.000Z',
+        updatedAt: '2021-04-06T18:14:41.000Z',
+        User: {
+          id: 54,
+          name: 'user2',
+          email: 'user2@example.com',
+          password: '$2a$10$E1xGl3bqIVT.OFSdwk8.SuGiuU4j5o2Q3fI4o2InjCuuita4plKiG',
+          isAdmin: false,
+          image: 'https://i.imgur.com/mxyxsfQ.png',
+          createdAt: '2021-04-06T00:19:36.000Z',
+          updatedAt: '2021-04-06T00:27:29.000Z'
         }
       }
     ],
+    FavoritedUsers: [],
     LikedUsers: []
   },
   isFavorited: false,
@@ -76,7 +81,8 @@ export default {
     };
   },
   components: {
-    RestaurantDetail
+    RestaurantDetail,
+    RestaurantComments
   },
   methods: {
     fetchRestaurant(restaurantId) {
