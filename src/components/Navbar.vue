@@ -29,7 +29,10 @@
             </li>
             <!-- is user is not admin -->
             <li class="nav-item me-3" v-if="!currentUser.isAdmin">
-              <router-link to="#" class="text-white nav-link">
+              <router-link
+                :to="{ name: 'user-profile', params: { id: currentUser.id } }"
+                class="text-white nav-link"
+              >
                 Hi, {{ currentUser.name || 'User' }}
               </router-link>
             </li>
@@ -58,7 +61,7 @@ const dummyUser = {
     image: 'https://i.pravatar.cc/300',
     isAdmin: false
   },
-  isAuthenticated: false
+  isAuthenticated: true
 };
 
 export default {
