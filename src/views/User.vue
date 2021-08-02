@@ -7,12 +7,13 @@
     <div class="row"></div>
     <div class="row">
       <!-- User Followings Card  -->
-      <user-followings-card :followings="followings" :current-user-id="currentUserId" />
+      <user-followings-card :followings="followings" />
 
       <!-- User Comments Card  -->
     </div>
     <div class="row mb-3">
       <!-- User Followers Card -->
+      <user-followers-card :followers="followers" />
 
       <!-- User Fav Restaurants Card -->
     </div>
@@ -22,6 +23,7 @@
 <script>
 import UserProfileCard from '../components/UserProfileCard.vue';
 import UserFollowingsCard from '../components/UserFollowingsCard.vue';
+import UserFollowersCard from '../components/UserFollowersCard.vue';
 
 const dummyData = {
   userProfile: {
@@ -110,7 +112,8 @@ export default {
   },
   components: {
     UserProfileCard,
-    UserFollowingsCard
+    UserFollowingsCard,
+    UserFollowersCard
   },
   methods: {
     fetchUser(userId) {
