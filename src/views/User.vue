@@ -10,6 +10,7 @@
       <user-followings-card :followings="followings" />
 
       <!-- User Comments Card  -->
+      <user-comments-card :restaurants="commentRestaurants" />
     </div>
     <div class="row mb-3">
       <!-- User Followers Card -->
@@ -24,6 +25,7 @@
 import UserProfileCard from '../components/UserProfileCard.vue';
 import UserFollowingsCard from '../components/UserFollowingsCard.vue';
 import UserFollowersCard from '../components/UserFollowersCard.vue';
+import UserCommentsCard from '../components/UserCommentsCard.vue';
 
 const dummyData = {
   userProfile: {
@@ -113,7 +115,8 @@ export default {
   components: {
     UserProfileCard,
     UserFollowingsCard,
-    UserFollowersCard
+    UserFollowersCard,
+    UserCommentsCard
   },
   methods: {
     fetchUser(userId) {
