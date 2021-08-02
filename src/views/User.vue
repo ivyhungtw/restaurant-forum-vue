@@ -17,6 +17,7 @@
       <user-followers-card :followers="followers" />
 
       <!-- User Fav Restaurants Card -->
+      <user-fav-restaurants-card :restaurants="favRestaurants" />
     </div>
   </div>
 </template>
@@ -26,6 +27,7 @@ import UserProfileCard from '../components/UserProfileCard.vue';
 import UserFollowingsCard from '../components/UserFollowingsCard.vue';
 import UserFollowersCard from '../components/UserFollowersCard.vue';
 import UserCommentsCard from '../components/UserCommentsCard.vue';
+import UserFavRestaurantsCard from '../components/UserFavRestaurantsCard.vue';
 
 const dummyData = {
   userProfile: {
@@ -116,7 +118,8 @@ export default {
     UserProfileCard,
     UserFollowingsCard,
     UserFollowersCard,
-    UserCommentsCard
+    UserCommentsCard,
+    UserFavRestaurantsCard
   },
   methods: {
     fetchUser(userId) {
