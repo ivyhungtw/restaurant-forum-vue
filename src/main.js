@@ -10,6 +10,9 @@ app.config.globalProperties.$filter = {
   fromNow(value) {
     if (!value) return '-';
     return moment(value).fromNow();
+  },
+  emptyImageFilter(src) {
+    return src || 'https://via.placeholder.com/350x220/DFDFDF?text=No+Image';
   }
 };
 app.use(store);
