@@ -4,9 +4,9 @@
       <img class="card-img-top" :src="restaurant.image" alt="Card image cap" />
       <div class="card-body">
         <p class="card-text title-wrap">
-          <a href="#">
+          <router-link :to="{ name: 'restaurant', params: { id: restaurant.id } }">
             {{ restaurant.name }}
-          </a>
+          </router-link>
         </p>
         <span class="badge badge-secondary">{{
           restaurant.Category ? restaurant.Category.name : 'uncategorized'
