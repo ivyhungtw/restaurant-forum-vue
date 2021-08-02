@@ -4,17 +4,16 @@
       <!-- User Profile Card -->
       <user-profile-card :user-profile="userProfile" :current-user-id="currentUserId" />
     </div>
-    <div class="row"></div>
     <div class="row">
       <!-- User Followings Card  -->
       <user-followings-card :followings="followings" />
 
-      <!-- User Comments Card  -->
-      <user-comments-card :restaurants="commentRestaurants" />
-    </div>
-    <div class="row mb-3">
       <!-- User Followers Card -->
       <user-followers-card :followers="followers" />
+    </div>
+    <div class="row mb-3">
+      <!-- User Comments Card  -->
+      <user-comments-card :restaurants="commentRestaurants" />
 
       <!-- User Fav Restaurants Card -->
       <user-fav-restaurants-card :restaurants="favRestaurants" />
