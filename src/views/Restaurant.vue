@@ -5,7 +5,10 @@
     <restaurant-detail :initial-restaurant="restaurant" />
     <hr />
     <!-- RestaurantComments -->
-    <restaurant-comments :restaurant-comments="restaurantComments" />
+    <restaurant-comments
+      :restaurant-comments="restaurantComments"
+      @delete-comment="deleteComment"
+    />
     <!-- CreateComment -->
   </div>
 </template>
@@ -102,6 +105,9 @@ export default {
         isLiked
       };
       this.restaurantComments = restaurant.Comments;
+    },
+    deleteComment(commentId) {
+      this.restaurantComments = this.restaurantComments.filter(comment => comment.id !== commentId);
     }
   },
   created() {

@@ -6,7 +6,12 @@
 
     <div>
       <blockquote v-for="comment in restaurantComments" :key="comment.id" class="blockquote mb-0">
-        <button v-if="currentUser.isAdmin" type="button" class="btn btn-danger float-end">
+        <button
+          v-if="currentUser.isAdmin"
+          type="button"
+          class="btn btn-danger float-end"
+          @click.prevent.stop="deleteComment(comment.id)"
+        >
           Delete
         </button>
         <h3>
@@ -30,7 +35,7 @@ const dummyUser = {
     id: 44,
     name: 'user1',
     email: 'user1@example.com',
-    isAdmin: false
+    isAdmin: true
   }
 };
 
@@ -45,6 +50,12 @@ export default {
     return {
       currentUser: dummyUser.currentUser
     };
+  },
+  emits: ['delete-comment'],
+  methods: {
+    deleteComment(commentId) {
+      this.$emit('delete-comment', commentId);
+    }
   }
 };
 </script>
