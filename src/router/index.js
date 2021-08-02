@@ -48,7 +48,11 @@ const routes = [
     name: 'users-top',
     component: () => import('../views/UsersTop.vue')
   },
-
+  {
+    path: '/users/:id',
+    name: 'user-profile',
+    component: () => import('../views/User.vue')
+  },
   {
     path: '/:catchAll(.*)*',
     name: 'not-found',

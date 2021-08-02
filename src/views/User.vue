@@ -1,0 +1,126 @@
+<template>
+  <div class="container mt-5 pt-5">
+    <div class="row">
+      <!-- User Profile Card -->
+      <user-profile-card :user-profile="userProfile" :current-user-id="currentUserId" />
+    </div>
+    <div class="row"></div>
+    <div class="row">
+      <!-- User Followings Card  -->
+
+      <!-- User Comments Card  -->
+    </div>
+    <div class="row mb-3">
+      <!-- User Followers Card -->
+
+      <!-- User Fav Restaurants Card -->
+    </div>
+  </div>
+</template>
+
+<script>
+import UserProfileCard from '../components/UserProfileCard.vue';
+
+const dummyData = {
+  userProfile: {
+    id: 44,
+    name: 'user1',
+    email: 'user1@example.com',
+    image: 'https://i.imgur.com/zadqwVq.png'
+  },
+  userId: 44,
+  commentRestaurants: [
+    {
+      id: 1104,
+      image: 'https://loremflickr.com/320/240/restaurant,food?lock=215'
+    },
+    {
+      id: 1224,
+      image: 'https://loremflickr.com/320/240/restaurant,food?lock=377'
+    },
+    {
+      id: 1094,
+      image: 'https://loremflickr.com/320/240/restaurant,food?lock=85'
+    },
+    {
+      id: 1254,
+      image: 'https://loremflickr.com/320/240/restaurant,food?lock=128'
+    }
+  ],
+  followers: [
+    {
+      id: 34,
+      image: 'https://i.imgur.com/1jDf2Me.png',
+      Followship: {
+        followerId: 34,
+        followingId: 44,
+        createdAt: '2021-04-09T10:39:50.000Z',
+        updatedAt: '2021-04-09T10:39:50.000Z'
+      }
+    }
+  ],
+  followings: [],
+  favRestaurants: [
+    {
+      id: 1114,
+      image: 'https://loremflickr.com/320/240/restaurant,food?lock=963',
+      Favorite: {
+        UserId: 44,
+        RestaurantId: 1114,
+        createdAt: '2021-04-08T17:56:51.000Z',
+        updatedAt: '2021-04-08T17:56:51.000Z'
+      }
+    },
+    {
+      id: 1084,
+      image: 'https://loremflickr.com/320/240/restaurant,food?lock=930',
+      Favorite: {
+        UserId: 44,
+        RestaurantId: 1084,
+        createdAt: '2021-06-28T12:42:26.000Z',
+        updatedAt: '2021-06-28T12:42:26.000Z'
+      }
+    }
+  ]
+};
+
+export default {
+  data() {
+    return {
+      currentUserId: -1,
+      userProfile: {},
+      commentRestaurants: [],
+      followers: [],
+      folloings: [],
+      favRestaurants: []
+    };
+  },
+  components: {
+    UserProfileCard
+  },
+  methods: {
+    fetchUser(userId) {
+      console.log(userId);
+      // TODO: fetch users/:id API
+
+      const { userProfile, commentRestaurants, followers, followings, favRestaurants } = dummyData;
+      this.userProfile = {
+        ...userProfile,
+        commentRestaurantsLength: commentRestaurants.length,
+        followersLength: followers.length,
+        followingsLength: followings.length,
+        favRestaurantsLength: favRestaurants.length
+      };
+      this.commentRestaurants = commentRestaurants;
+      this.followers = followers;
+      this.followings = followings;
+      this.favRestaurants = favRestaurants;
+      this.currentUserId = dummyData.userId;
+    }
+  },
+  created() {
+    const { id } = this.$route.params;
+    this.fetchUser(id);
+  }
+};
+</script>
