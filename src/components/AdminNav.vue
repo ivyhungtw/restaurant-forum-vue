@@ -3,7 +3,7 @@
     <h1>Admin Backend</h1>
     <router-link :to="{ name: 'admin-restaurants' }">Restaurants</router-link> |
     <router-link :to="{ name: 'admin-categories' }">Categories</router-link> |
-    <a href="#">Users</a>
+    <router-link :to="{ name: 'admin-users' }">Users</router-link>
   </div>
 </template>
 
