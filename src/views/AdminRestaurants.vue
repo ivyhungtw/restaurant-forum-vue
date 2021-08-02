@@ -1,6 +1,7 @@
 <template>
   <div class="container py-5">
     <!-- 後台導覽頁籤 AdminNav -->
+    <admin-nav />
 
     <a href="#" class="btn btn-primary mb-4">
       New Restaurant
@@ -9,3 +10,13 @@
     <!-- 後台餐廳列表 AdminRestaurantsTable -->
   </div>
 </template>
+
+<script>
+import AdminNav from '../components/AdminNav.vue';
+
+export default {
+  components: {
+    AdminNav
+  }
+};
+</script>
