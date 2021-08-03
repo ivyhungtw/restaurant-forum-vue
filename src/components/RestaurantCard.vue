@@ -40,11 +40,16 @@
           v-if="restaurant.isLiked"
           type="button"
           class="btn btn-danger like me-2"
-          @click.prevent.stop="unlike"
+          @click.prevent.stop="unlike(restaurant.id)"
         >
           Unlike
         </button>
-        <button v-else type="button" class="btn btn-primary like me-2" @click.prevent.stop="like">
+        <button
+          v-else
+          type="button"
+          class="btn btn-primary like me-2"
+          @click.prevent.stop="like(restaurant.id)"
+        >
           Like
         </button>
       </div>
@@ -76,11 +81,6 @@ export default {
           throw new Error(data.message);
         }
 
-        Toast.fire({
-          icon: 'success',
-          title: `Add restaurant ${data.restaurantName} to your favorite list successfully!`
-        });
-
         this.restaurant = {
           ...this.restaurant,
           isFavorited: true
@@ -99,11 +99,6 @@ export default {
           throw new Error(data.message);
         }
 
-        Toast.fire({
-          icon: 'success',
-          title: `Remove restaurant ${data.restaurantName} from your favorite list successfully!`
-        });
-
         this.restaurant = {
           ...this.restaurant,
           isFavorited: false
@@ -115,17 +110,42 @@ export default {
         });
       }
     },
-    like() {
-      this.restaurant = {
-        ...this.restaurant,
-        isLiked: true
-      };
+    async like(restaurantId) {
+      try {
+        const { data } = await usersAPI.like({ restaurantId });
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        this.restaurant = {
+          ...this.restaurant,
+          isLiked: true
+        };
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to like the restaurant, please try again later.'
+        });
+      }
     },
-    unlike() {
-      this.restaurant = {
-        ...this.restaurant,
-        isLiked: false
-      };
+    async unlike(restaurantId) {
+      try {
+        const { data } = await usersAPI.unlike({ restaurantId });
+
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        this.restaurant = {
+          ...this.restaurant,
+          isLiked: false
+        };
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to unlike the restaurant, please try again later.'
+        });
+      }
     }
   }
 };
