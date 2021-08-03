@@ -58,7 +58,6 @@
 </template>
 
 <script>
-import usersAPI from '../apis/users';
 import restaurantsAPI from '../apis/restaurants';
 import { Toast } from '../utils/helpers';
 
@@ -113,7 +112,7 @@ export default {
     },
     async like(restaurantId) {
       try {
-        const { data } = await usersAPI.like({ restaurantId });
+        const { data } = await restaurantsAPI.like({ restaurantId });
         if (data.status !== 'success') {
           throw new Error(data.message);
         }
@@ -131,7 +130,7 @@ export default {
     },
     async unlike(restaurantId) {
       try {
-        const { data } = await usersAPI.unlike({ restaurantId });
+        const { data } = await restaurantsAPI.unlike({ restaurantId });
 
         if (data.status !== 'success') {
           throw new Error(data.message);

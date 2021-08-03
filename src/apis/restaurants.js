@@ -29,5 +29,15 @@ export default {
     return apiHelper.delete(`restaurants/${restaurantId}/favorites`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     });
+  },
+  like({ restaurantId }) {
+    return apiHelper.post(`restaurants/${restaurantId}/likes`, null, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    });
+  },
+  unlike({ restaurantId }) {
+    return apiHelper.delete(`restaurants/${restaurantId}/likes`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    });
   }
 };
