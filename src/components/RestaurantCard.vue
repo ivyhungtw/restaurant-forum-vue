@@ -24,7 +24,7 @@
           v-if="restaurant.isFavorited"
           type="button"
           class="btn btn-danger btn-border favorite me-2"
-          @click.prevent.stop="removeFavorite"
+          @click.prevent.stop="removeFavorite(restaurant.id)"
         >
           Remove from Fav
         </button>
@@ -32,7 +32,7 @@
           v-else
           type="button"
           class="btn btn-primary btn-border favorite me-2"
-          @click.prevent.stop="addFavorite"
+          @click.prevent.stop="addFavorite(restaurant.id)"
         >
           Add to Fav
         </button>
@@ -53,6 +53,9 @@
 </template>
 
 <script>
+import usersAPI from '../apis/users';
+import { Toast } from '../utils/helpers';
+
 export default {
   props: {
     initialRestuarant: {
@@ -66,17 +69,51 @@ export default {
     };
   },
   methods: {
-    addFavorite() {
-      this.restaurant = {
-        ...this.restaurant,
-        isFavorited: true
-      };
+    async addFavorite(restaurantId) {
+      try {
+        const { data } = await usersAPI.addFavorite({ restaurantId });
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        Toast.fire({
+          icon: 'success',
+          title: `Add restaurant ${data.restaurantName} to your favorite list successfully!`
+        });
+
+        this.restaurant = {
+          ...this.restaurant,
+          isFavorited: true
+        };
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to add the restaurant to your favorite list, please try again later.'
+        });
+      }
     },
-    removeFavorite() {
-      this.restaurant = {
-        ...this.restaurant,
-        isFavorited: false
-      };
+    async removeFavorite(restaurantId) {
+      try {
+        const { data } = await usersAPI.removeFavorite({ restaurantId });
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        Toast.fire({
+          icon: 'success',
+          title: `Remove restaurant ${data.restaurantName} from your favorite list successfully!`
+        });
+
+        this.restaurant = {
+          ...this.restaurant,
+          isFavorited: false
+        };
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to remove the restaurant from your favorite list, please try again later.'
+        });
+      }
     },
     like() {
       this.restaurant = {
