@@ -3,7 +3,11 @@
     <div class="row no-gutters">
       <div class="col-md-4">
         <a href="#">
-          <img class="card-img" :src="$filter.emptyImageFilter(restaurant.image)" />
+          <img
+            class="card-img"
+            :src="$filter.emptyImageFilter(restaurant.image)"
+            style="height: 100%; object-fit: cover;"
+          />
         </a>
       </div>
       <div class="col-md-8">
@@ -11,7 +15,7 @@
           <h5 class="card-title">
             Mrs. Mckenzie Johnston
           </h5>
-          <span class="badge bg-secondary">Saved：{{ restaurant.favCount }}</span>
+          <span class="badge bg-secondary">Saved：{{ restaurant.favCount || 0 }}</span>
           <p class="card-text">
             {{ restaurant.description }}
           </p>
@@ -25,11 +29,16 @@
             v-if="restaurant.isFavorited"
             type="button"
             class="btn btn-danger me-2"
-            @click.prevent.stop="removeFavorite"
+            @click.prevent.stop="removeFavorite(restaurant.id)"
           >
             Remove from Fav
           </button>
-          <button v-else type="button" class="btn btn-primary" @click.prevent.stop="addFavorite">
+          <button
+            v-else
+            type="button"
+            class="btn btn-primary"
+            @click.prevent.stop="addFavorite(restaurant.id)"
+          >
             Add to Fav
           </button>
         </div>
@@ -39,6 +48,9 @@
 </template>
 
 <script>
+import restaurantsAPI from '../apis/restaurants';
+import { Toast } from '../utils/helpers';
+
 export default {
   props: {
     initialRestaurant: {
@@ -52,17 +64,43 @@ export default {
     };
   },
   methods: {
-    addFavorite() {
-      this.restaurant = {
-        ...this.restaurant,
-        isFavorited: true
-      };
+    async addFavorite(restaurantId) {
+      try {
+        const { data } = await restaurantsAPI.addFavorite({ restaurantId });
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        this.restaurant = {
+          ...this.restaurant,
+          isFavorited: true,
+          favCount: this.favCount ? this.favCount + 1 : 1
+        };
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to add the restaurant to your favorite list, please try again later.'
+        });
+      }
     },
-    removeFavorite() {
-      this.restaurant = {
-        ...this.restaurant,
-        isFavorited: false
-      };
+    async removeFavorite(restaurantId) {
+      try {
+        const { data } = await restaurantsAPI.removeFavorite({ restaurantId });
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        this.restaurant = {
+          ...this.restaurant,
+          favCount: Number(this.favCount) - 1,
+          isFavorited: false
+        };
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to remove the restaurant from your favorite list, please try again later.'
+        });
+      }
     }
   }
 };

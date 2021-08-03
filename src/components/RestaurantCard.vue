@@ -59,6 +59,7 @@
 
 <script>
 import usersAPI from '../apis/users';
+import restaurantsAPI from '../apis/restaurants';
 import { Toast } from '../utils/helpers';
 
 export default {
@@ -76,7 +77,7 @@ export default {
   methods: {
     async addFavorite(restaurantId) {
       try {
-        const { data } = await usersAPI.addFavorite({ restaurantId });
+        const { data } = await restaurantsAPI.addFavorite({ restaurantId });
         if (data.status !== 'success') {
           throw new Error(data.message);
         }
@@ -94,7 +95,7 @@ export default {
     },
     async removeFavorite(restaurantId) {
       try {
-        const { data } = await usersAPI.removeFavorite({ restaurantId });
+        const { data } = await restaurantsAPI.removeFavorite({ restaurantId });
         if (data.status !== 'success') {
           throw new Error(data.message);
         }
