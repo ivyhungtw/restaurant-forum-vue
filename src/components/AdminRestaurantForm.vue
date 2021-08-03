@@ -1,8 +1,8 @@
 <template>
-  <form @submit.prevent.stop="submitForm">
+  <form @submit.prevent.stop="submitForm" v-show="!isLoading">
     <!-- Name -->
     <div class="mb-3">
-      <label class="form-label" for="name">Name</label>
+      <label class="form-label" for="name">Name <span>*</span></label>
       <input
         id="name"
         v-model="restaurant.name"
@@ -16,7 +16,7 @@
 
     <!-- Category -->
     <div class="mb-3">
-      <label class="form-label" for="categoryId">Category</label>
+      <label class="form-label" for="categoryId">Category <span>*</span></label>
       <select
         id="categoryId"
         v-model="restaurant.categoryId"
@@ -48,7 +48,7 @@
 
     <!-- Address -->
     <div class="mb-3">
-      <label class="form-label" for="address">Address</label>
+      <label class="form-label" for="address">Address <span>*</span></label>
       <input
         id="address"
         v-model="restaurant.address"
@@ -56,6 +56,7 @@
         class="form-control"
         placeholder="Enter address"
         name="address"
+        required
       />
     </div>
 
@@ -73,13 +74,14 @@
 
     <!-- Description -->
     <div class="mb-3">
-      <label class="form-label" for="description">Description</label>
+      <label class="form-label" for="description">Description <span>*</span></label>
       <textarea
         id="description"
         v-model="restaurant.description"
         class="form-control"
         rows="3"
         name="description"
+        required
       />
     </div>
 
@@ -103,59 +105,15 @@
       />
     </div>
 
-    <button type="submit" class="btn btn-primary">
-      Submit
+    <button type="submit" class="btn btn-primary" :disabled="isProcessing">
+      {{ isProcessing ? 'Processing' : 'Submit' }}
     </button>
   </form>
 </template>
 
 <script>
-const dummyData = {
-  categories: [
-    {
-      id: 61,
-      name: '複合式料理',
-      createdAt: '2021-04-06T00:18:27.000Z',
-      updatedAt: '2021-04-06T00:18:27.000Z'
-    },
-    {
-      id: 51,
-      name: '美式料理',
-      createdAt: '2021-04-06T00:18:27.000Z',
-      updatedAt: '2021-04-06T00:18:27.000Z'
-    },
-    {
-      id: 41,
-      name: '素食料理',
-      createdAt: '2021-04-06T00:18:27.000Z',
-      updatedAt: '2021-04-06T00:18:27.000Z'
-    },
-    {
-      id: 31,
-      name: '墨西哥料理',
-      createdAt: '2021-04-06T00:18:27.000Z',
-      updatedAt: '2021-04-06T00:18:27.000Z'
-    },
-    {
-      id: 21,
-      name: '義大利料理',
-      createdAt: '2021-04-06T00:18:27.000Z',
-      updatedAt: '2021-04-06T00:18:27.000Z'
-    },
-    {
-      id: 11,
-      name: '日本料理',
-      createdAt: '2021-04-06T00:18:27.000Z',
-      updatedAt: '2021-04-06T00:18:27.000Z'
-    },
-    {
-      id: 1,
-      name: '中式料理',
-      createdAt: '2021-04-06T00:18:27.000Z',
-      updatedAt: '2021-04-06T00:18:27.000Z'
-    }
-  ]
-};
+import adminAPI from '../apis/admin';
+import { Toast } from '../utils/helpers';
 
 export default {
   props: {
@@ -171,6 +129,10 @@ export default {
         image: '',
         CategoryId: -1
       })
+    },
+    isProcessing: {
+      type: Boolean,
+      requried: true
     }
   },
   data() {
@@ -178,12 +140,24 @@ export default {
       categories: [],
       restaurant: {
         ...this.initialRestaurant
-      }
+      },
+      isLoading: true
     };
   },
   methods: {
-    fetchCategories() {
-      this.categories = dummyData.categories;
+    async fetchCategories() {
+      try {
+        const { data } = await adminAPI.categories.get();
+        this.categories = data.categories;
+        this.isLoading = false;
+      } catch (err) {
+        console.log(err);
+        this.isLoading = false;
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to get catogry data, please try again later.'
+        });
+      }
     },
     changeFile(e) {
       const { files } = e.target;
@@ -196,9 +170,16 @@ export default {
       }
     },
     submitForm(e) {
+      const { name, categoryId, address, description } = this.restaurant;
+      if (!name || !categoryId || !address || !description) {
+        return Toast.fire({
+          icon: 'warning',
+          title: 'Please fill out all required fields.'
+        });
+      }
       const form = e.target;
       const formData = new FormData(form);
-      this.$emit('submit-form', formData);
+      return this.$emit('submit-form', formData);
     }
   },
   created() {
@@ -206,3 +187,9 @@ export default {
   }
 };
 </script>
+
+<style>
+label span {
+  color: rgb(216, 3, 3);
+}
+</style>
