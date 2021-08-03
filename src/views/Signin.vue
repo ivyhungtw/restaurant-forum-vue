@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container mt-5 pt-5">
     <div class="card card-body">
       <h1 class="text-center mt-3">Login</h1>
       <form
@@ -37,7 +37,7 @@
             required
           />
         </div>
-        <button type="submit" class="btn btn-primary btn-block col-6 mt-4">
+        <button type="submit" class="btn btn-primary btn-block col-6 mt-4" :disabled="isProcessing">
           Login
         </button>
         <p class="lead mt-4" style="width: 300px; margin-left: 100px;">
@@ -49,20 +49,49 @@
 </template>
 
 <script>
+import authenticationAPI from '../apis/authentication';
+import { Toast } from '../utils/helpers';
+
 export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      isProcessing: false
     };
   },
   methods: {
-    handlesubmit() {
-      const data = {
-        email: this.email,
-        password: this.password
-      };
-      console.log(JSON.stringify(data));
+    async handlesubmit() {
+      try {
+        if (!this.email || !this.password) {
+          return Toast.fire({
+            icon: 'warning',
+            title: 'Please fill out email and account'
+          });
+        }
+
+        this.isProcessing = true;
+
+        const response = await authenticationAPI.signin({
+          email: this.email,
+          password: this.password
+        });
+        const { data } = response;
+
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        localStorage.setItem('token', data.token);
+
+        return this.$router.push('/restaurants');
+      } catch (err) {
+        this.isProcessing = false;
+        return Toast.fire({
+          icon: 'warning',
+          title: 'Incorrect email or password'
+        });
+      }
     }
   }
 };
