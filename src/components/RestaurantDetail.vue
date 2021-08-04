@@ -41,7 +41,7 @@
         v-if="restaurant.isFavorited"
         type="button"
         class="btn btn-danger btn-border me-2"
-        @click.prevent.stop="removeFavorite"
+        @click.prevent.stop="removeFavorite(restaurant.id)"
       >
         Remove from Fav
       </button>
@@ -49,7 +49,7 @@
         v-else
         type="button"
         class="btn btn-primary btn-border me-2"
-        @click.prevent.stop="addFavorite"
+        @click.prevent.stop="addFavorite(restaurant.id)"
       >
         Add to Fav
       </button>
@@ -57,11 +57,16 @@
         v-if="restaurant.isLiked"
         type="button"
         class="btn btn-danger like me-2"
-        @click.prevent.stop="unlike"
+        @click.prevent.stop="unlike(restaurant.id)"
       >
         Unlike
       </button>
-      <button v-else type="button" class="btn btn-primary like me-2" @click.prevent.stop="like">
+      <button
+        v-else
+        type="button"
+        class="btn btn-primary like me-2"
+        @click.prevent.stop="like(restaurant.id)"
+      >
         Like
       </button>
     </div>
@@ -69,6 +74,9 @@
 </template>
 
 <script>
+import restaurantsAPI from '../apis/restaurants';
+import { Toast } from '../utils/helpers';
+
 export default {
   props: {
     initialRestaurant: {
@@ -90,29 +98,79 @@ export default {
     }
   },
   methods: {
-    addFavorite() {
-      this.restaurant = {
-        ...this.restaurant,
-        isFavorited: true
-      };
+    async addFavorite(restaurantId) {
+      try {
+        const { data } = await restaurantsAPI.addFavorite({ restaurantId });
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        this.restaurant = {
+          ...this.restaurant,
+          isFavorited: true
+        };
+      } catch (err) {
+        console.log(err);
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to add the restaurant to your favorite list, please try again later.'
+        });
+      }
     },
-    removeFavorite() {
-      this.restaurant = {
-        ...this.restaurant,
-        isFavorited: false
-      };
+    async removeFavorite(restaurantId) {
+      try {
+        const { data } = await restaurantsAPI.removeFavorite({ restaurantId });
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        this.restaurant = {
+          ...this.restaurant,
+          isFavorited: false
+        };
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to remove the restaurant from your favorite list, please try again later.'
+        });
+      }
     },
-    like() {
-      this.restaurant = {
-        ...this.restaurant,
-        isLiked: true
-      };
+    async like(restaurantId) {
+      try {
+        const { data } = await restaurantsAPI.like({ restaurantId });
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        this.restaurant = {
+          ...this.restaurant,
+          isLiked: true
+        };
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to like the restaurant, please try again later.'
+        });
+      }
     },
-    unlike() {
-      this.restaurant = {
-        ...this.restaurant,
-        isLiked: false
-      };
+    async unlike(restaurantId) {
+      try {
+        const { data } = await restaurantsAPI.unlike({ restaurantId });
+
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        this.restaurant = {
+          ...this.restaurant,
+          isLiked: false
+        };
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to unlike the restaurant, please try again later.'
+        });
+      }
     }
   }
 };

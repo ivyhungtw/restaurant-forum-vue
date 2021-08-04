@@ -53,8 +53,6 @@ export default {
       try {
         const { data } = await restaurantAPI.getRestaurant({ restaurantId });
 
-        console.log(data);
-
         if (data.status !== 'success') {
           if (data.status === 'error') {
             return Toast.fire({

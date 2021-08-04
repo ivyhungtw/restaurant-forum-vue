@@ -10,8 +10,9 @@
     <hr />
 
     <ul>
-      <li>評論數： {{ restaurant.commentsLength }}</li>
-      <li>瀏覽次數： {{ restaurant.viewCounts }}</li>
+      <li>Number of comments: {{ restaurant.commentsLength }}</li>
+      <li>Number of views: {{ restaurant.viewCounts }}</li>
+      <li>Number of saves: {{ restaurant.saveCounts }}</li>
     </ul>
 
     <button type="button" class="btn btn-link" @click="$router.back()">
@@ -21,49 +22,8 @@
 </template>
 
 <script>
-const dummyData = {
-  restaurant: {
-    id: 1114,
-    name: 'Estelle Muller',
-    tel: '1-249-412-1705',
-    address: '69435 Giuseppe Lodge',
-    opening_hours: '08:00',
-    description:
-      'Autem quia esse et similique expedita.\nEa pariatur similique dolore atque cumque.',
-    image: 'https://loremflickr.com/320/240/restaurant,food?lock=963',
-    CategoryId: 41,
-    viewCounts: 3,
-    createdAt: '2021-04-06T18:12:12.000Z',
-    updatedAt: '2021-04-10T19:00:59.000Z',
-    Category: {
-      id: 41,
-      name: '素食料理',
-      createdAt: '2021-04-06T00:18:27.000Z',
-      updatedAt: '2021-04-06T00:18:27.000Z'
-    },
-    Comments: [],
-    FavoritedUsers: [
-      {
-        id: 44,
-        Favorite: {
-          UserId: 44,
-          RestaurantId: 1114,
-          createdAt: '2021-04-08T17:56:51.000Z',
-          updatedAt: '2021-04-08T17:56:51.000Z'
-        }
-      },
-      {
-        id: 34,
-        Favorite: {
-          UserId: 34,
-          RestaurantId: 1114,
-          createdAt: '2021-04-10T19:00:55.000Z',
-          updatedAt: '2021-04-10T19:00:55.000Z'
-        }
-      }
-    ]
-  }
-};
+import restaurantsAPI from '../apis/restaurants';
+import { Toast } from '../utils/helpers';
 
 export default {
   data() {
@@ -72,18 +32,48 @@ export default {
     };
   },
   methods: {
-    fetchDashBoard() {
-      const { restaurant, Comments } = dummyData;
-      this.restaurant = {
-        name: restaurant.name,
-        categoryName: restaurant.Category.name,
-        commentsLength: Comments ? Comments.length : 0,
-        viewCounts: restaurant.viewCounts
-      };
+    async fetchDashBoard(restaurantId) {
+      try {
+        const { data } = await restaurantsAPI.getDashboard({ restaurantId });
+        console.log('data', data);
+
+        if (data.status !== 'success') {
+          if (data.status === 'error') {
+            return Toast.fire({
+              icon: 'error',
+              title: data.message
+            });
+          }
+          throw new Error(data.message);
+        }
+
+        const { restaurant, Comments } = data;
+        this.restaurant = {
+          name: restaurant.name,
+          categoryName: restaurant.Category.name,
+          commentsLength: Comments ? Comments.length : 0,
+          viewCounts: restaurant.viewCounts,
+          saveCounts: restaurant.FavoritedUsers.length
+        };
+
+        return null;
+      } catch (err) {
+        console.log(err);
+        return Toast.fire({
+          icon: 'error',
+          title: 'Sorry, we can not get restaurant data rignt now, please try again later.'
+        });
+      }
     }
   },
   created() {
-    this.fetchDashBoard();
+    const { id } = this.$route.params;
+    this.fetchDashBoard(id);
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = this.$route.params;
+    this.fetchDashBoard(id);
+    next();
   }
 };
 </script>

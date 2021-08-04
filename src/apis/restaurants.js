@@ -15,6 +15,11 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     });
   },
+  getDashboard({ restaurantId }) {
+    return apiHelper.get(`/restaurants/${restaurantId}/dashboard`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    });
+  },
   getRestaurantsFeed() {
     return apiHelper.get('/restaurants/feeds', {
       headers: { Authorization: `Bearer ${getToken()}` }
