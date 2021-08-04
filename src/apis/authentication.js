@@ -6,5 +6,8 @@ export default {
       email,
       password
     });
+  },
+  signup({ name, email, password, confirmPassword }) {
+    return apiHelper.post('/signup', { name, email, password, confirmPassword });
   }
 };

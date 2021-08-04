@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container mt-5 pt-5">
     <div class="card card-body">
       <h1 class="text-center mt-3">Register</h1>
       <form
@@ -61,7 +61,7 @@
             required
           />
         </div>
-        <button type="submit" class="btn btn-primary btn-block col-6 mt-5">
+        <button type="submit" class="btn btn-primary btn-block col-6 mt-5" :disabled="isProcessing">
           Register
         </button>
         <p class="lead mt-4" style="width: 300px; margin-left: 72px;">
@@ -74,24 +74,69 @@
 </template>
 
 <script>
+import authenticationAPI from '../apis/authentication';
+import { Toast } from '../utils/helpers';
+
 export default {
   data() {
     return {
       name: '',
       email: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      isProcessing: false
     };
   },
   methods: {
-    handleSubmit() {
-      const data = {
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        confrimPassword: this.confirmPassword
-      };
-      console.log(JSON.stringify(data));
+    async handleSubmit() {
+      try {
+        if (!this.name || !this.email || !this.password || !this.confirmPassword) {
+          return Toast.fire({
+            icon: 'warning',
+            title: 'Please fill out all fields.'
+          });
+        }
+
+        if (this.password !== this.confirmPassword) {
+          return Toast.fire({
+            icon: 'warning',
+            title: 'Password and confirmPassword do not match.'
+          });
+        }
+
+        this.isProcessing = true;
+
+        const { data } = await authenticationAPI.signup({
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          confirmPassword: this.confirmPassword
+        });
+
+        if (data.status !== 'success') {
+          this.isProcessing = false;
+          if (data.status === 'error') {
+            return Toast.fire({
+              icon: 'error',
+              title: data.message
+            });
+          }
+          throw new Error(data.message);
+        }
+
+        Toast.fire({
+          icon: 'success',
+          title: data.message
+        });
+
+        return this.$router.push({ name: 'signin' });
+      } catch (err) {
+        this.isProcessing = false;
+        return Toast.fire({
+          icon: 'warning',
+          title: 'Incorrect email or password'
+        });
+      }
     }
   }
 };
