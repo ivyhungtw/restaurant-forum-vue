@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Signin from '@/views/Signin.vue';
 import Restaurants from '@/views/Restaurants.vue';
+import store from '../store';
 
 const routes = [
   {
@@ -104,6 +105,12 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
   linkExactActiveClass: 'active'
+});
+
+router.beforeEach((to, from, next) => {
+  // call action
+  store.dispatch('fetchCurrentUser');
+  next();
 });
 
 export default router;

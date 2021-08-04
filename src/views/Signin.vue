@@ -84,6 +84,9 @@ export default {
 
         localStorage.setItem('token', data.token);
 
+        // set state
+        this.$store.commit('setCurrentUser', data.user);
+
         return this.$router.push('/restaurants');
       } catch (err) {
         this.isProcessing = false;
