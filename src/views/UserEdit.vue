@@ -1,6 +1,6 @@
 <template>
   <div class="container py-5">
-    <form>
+    <form @submit.prevent.stop="submitForm">
       <div class="mb-3">
         <label class="form-label" for="name">Name</label>
         <input
@@ -33,7 +33,7 @@
         />
       </div>
 
-      <button type="submit" class="btn btn-primary" @submit="submitForm">
+      <button type="submit" class="btn btn-primary" :disabled="isProcessing">
         Submit
       </button>
     </form>
@@ -41,73 +41,35 @@
 </template>
 
 <script>
-const dummyData = {
-  userProfile: {
-    id: 1,
-    name: 'root',
-    email: 'root@example.com',
-    image: null
-  },
-  userId: 2,
-  commentRestaurants: [
-    {
-      id: 4,
-      image: 'https://loremflickr.com/320/240/restaurant,food?lock=233'
-    },
-    {
-      id: 8,
-      image: 'https://loremflickr.com/320/240/restaurant,food?lock=513'
-    },
-    {
-      id: 44,
-      image: 'https://loremflickr.com/320/240/restaurant,food?lock=335'
-    },
-    {
-      id: 19,
-      image: 'https://loremflickr.com/320/240/restaurant,food?lock=265'
-    }
-  ],
-  followers: [
-    {
-      id: 2,
-      image: null,
-      Followship: {
-        followerId: 2,
-        followingId: 1,
-        createdAt: '2021-06-19T22:39:45.000Z',
-        updatedAt: '2021-06-19T22:39:45.000Z'
-      }
-    }
-  ],
-  followings: [],
-  favRestaurants: []
-};
+import { mapState } from 'vuex';
+import usersAPI from '../apis/users';
+import { Toast } from '../utils/helpers';
 
 export default {
   data() {
     return {
-      user: {
-        id: -1,
-        image: '',
-        name: ''
-      }
+      user: {},
+      isProcessing: false
     };
   },
   created() {
-    const { id } = this.$route.params;
-    this.fetchUser(id);
+    this.setUser(this.currentUser);
+  },
+  computed: {
+    ...mapState(['currentUser'])
+  },
+  watch: {
+    currentUser(newValue) {
+      this.setUser(newValue);
+    }
   },
   methods: {
-    fetchUser(userId) {
-      console.log(userId);
-      // TODO: fetch /users/:id
-      const { userProfile } = dummyData;
-      const { id, name, image } = userProfile;
-      this.user = {
-        id,
-        name,
-        image
-      };
+    setUser(user) {
+      const { id } = this.$route.params;
+      if (Number(id) !== user.id) {
+        this.$router.push({ name: 'not-found' });
+      }
+      this.user = { ...this.currentUser };
     },
     changeFile(e) {
       const { files } = e.target;
@@ -119,10 +81,38 @@ export default {
         this.user.image = imageURL;
       }
     },
-    submitForm(e) {
-      const form = e.target;
-      const formData = new FormData(form);
-      console.log(formData);
+    async submitForm(e) {
+      try {
+        if (!this.user.name || this.user.name.length > 25) {
+          return Toast.fire({
+            icon: 'error',
+            title: 'Name can not be empty or longer than 25 characters.'
+          });
+        }
+        this.isProcessing = true;
+
+        const form = e.target;
+        const formData = new FormData(form);
+
+        const { data } = await usersAPI.update({ userId: this.user.id, formData });
+
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        this.$router.push({ name: 'user-profile', params: { id: this.currentUser.id } });
+        return Toast.fire({
+          icon: 'success',
+          title: 'Update successfully!'
+        });
+      } catch (err) {
+        this.isProcessing = false;
+        console.log(err);
+        return Toast.fire({
+          icon: 'error',
+          title: 'Unable to update user data, please try again later.'
+        });
+      }
     }
   }
 };
