@@ -1,31 +1,18 @@
 <template>
   <div class="container py-5">
     <!-- Admin Restaurant Form -->
-    <admin-restaurant-form :initial-restaurant="restaurant" @submit-form="submitForm" />
+    <admin-restaurant-form
+      :initial-restaurant="restaurant"
+      @submit-form="submitForm"
+      :is-processing="isProcessing"
+    />
   </div>
 </template>
 
 <script>
 import AdminRestaurantForm from '../components/AdminRestaurantForm.vue';
-
-const dummyData = {
-  restaurant: {
-    id: 1534,
-    name: 'Jeannette Wyman',
-    tel: '(888) 800-7305 x9493',
-    address: '32621 Arlo Oval',
-    opening_hours: '08:00',
-    description: 'Qui enim ipsa ut nihil et ut nemo.',
-    image: 'https://loremflickr.com/320/240/restaurant,food?lock=647',
-    CategoryId: 51,
-    Category: {
-      id: 51,
-      name: '美式料理',
-      createdAt: '2021-04-06T00:18:27.000Z',
-      updatedAt: '2021-04-06T00:18:27.000Z'
-    }
-  }
-};
+import adminAPI from '../apis/admin';
+import { Toast } from '../utils/helpers';
 
 export default {
   name: 'AdminRestaurantEdit',
@@ -43,39 +30,85 @@ export default {
         description: '',
         image: '',
         CategoryId: -1
-      }
+      },
+      isProcessing: false
     };
   },
   created() {
     const { id } = this.$route.params;
     this.fetchRestaurant(id);
   },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchRestaurant(id);
+    next();
+  },
   methods: {
-    fetchRestaurant(restaurantId) {
-      console.log(restaurantId);
-      const { restaurant } = dummyData;
-      const {
-        id,
-        name,
-        tel,
-        address,
-        opening_hours: openingHours,
-        description,
-        image,
-        CategoryId: categoryId
-      } = restaurant;
-      this.restaurant = {
-        id,
-        name,
-        tel,
-        address,
-        openingHours,
-        description,
-        image,
-        categoryId
-      };
+    async fetchRestaurant(restaurantId) {
+      try {
+        const { data } = await adminAPI.restaurants.getDetail({ restaurantId });
+        const {
+          id,
+          name,
+          tel,
+          address,
+          opening_hours: openingHours,
+          description,
+          image,
+          CategoryId: categoryId
+        } = data.restaurant;
+
+        this.restaurant = {
+          id,
+          name,
+          tel,
+          address,
+          openingHours,
+          description,
+          image,
+          categoryId
+        };
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to get restaurant data, please try again later.'
+        });
+      }
     },
-    submitForm(formData) {
+    async submitForm(formData) {
+      try {
+        this.isProcessing = true;
+        const { data } = await adminAPI.restaurants.update({
+          restaurantId: this.restaurant.id,
+          formData
+        });
+
+        // handle errors
+        if (data.status !== 'success') {
+          if (data.errors) {
+            this.isProcessing = false;
+            await Toast.fire({
+              icon: 'error',
+              title: data.errors[0].message
+            });
+            if (data.errors[1]) {
+              await Toast.fire({
+                icon: 'error',
+                title: data.errors[1].message
+              });
+            }
+          } else {
+            throw new Error(data.errors);
+          }
+        } else {
+          this.$router.push({ name: 'admin-restaurants' });
+        }
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to update restaurant data, please try again later.'
+        });
+      }
       // TODO: post /restaurants
       console.log(formData);
     }

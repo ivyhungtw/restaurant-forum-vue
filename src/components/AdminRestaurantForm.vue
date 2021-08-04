@@ -144,6 +144,14 @@ export default {
       isLoading: true
     };
   },
+  watch: {
+    initialRestaurant(newValue) {
+      this.restaurant = {
+        ...this.restaurant,
+        ...newValue
+      };
+    }
+  },
   methods: {
     async fetchCategories() {
       try {
