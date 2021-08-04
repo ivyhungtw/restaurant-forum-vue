@@ -14,7 +14,12 @@
           />
         </div>
         <div class="col-auto">
-          <button type="button" class="btn btn-primary" @click.prevent.stop="createCategory">
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click.prevent.stop="createCategory"
+            :disabled="isCreating"
+          >
             Create
           </button>
         </div>
@@ -90,35 +95,8 @@
 
 <script>
 import AdminNav from '@/components/AdminNav.vue';
-//  2. 定義暫時使用的資料
-const dummyData = {
-  categories: [
-    {
-      id: 1,
-      name: '中式料理',
-      createdAt: '2019-06-22T09:00:43.000Z',
-      updatedAt: '2019-06-22T09:00:43.000Z'
-    },
-    {
-      id: 2,
-      name: '日本料理',
-      createdAt: '2019-06-22T09:00:43.000Z',
-      updatedAt: '2019-06-22T09:00:43.000Z'
-    },
-    {
-      id: 3,
-      name: '義大利料理',
-      createdAt: '2019-06-22T09:00:43.000Z',
-      updatedAt: '2019-06-22T09:00:43.000Z'
-    },
-    {
-      id: 4,
-      name: '墨西哥料理',
-      createdAt: '2019-06-22T09:00:43.000Z',
-      updatedAt: '2019-06-22T09:00:43.000Z'
-    }
-  ]
-};
+import adminAPI from '../apis/admin';
+import { Toast, ConfirmDelete } from '../utils/helpers';
 
 export default {
   name: 'AdminCategory',
@@ -128,33 +106,109 @@ export default {
   data() {
     return {
       categories: [],
-      newCategoryName: ''
+      newCategoryName: '',
+      isCreating: false
     };
   },
   created() {
     this.fetchCategories();
   },
   methods: {
-    fetchCategories() {
-      this.categories = dummyData.categories.map(category => ({
-        ...category,
-        isEditing: false,
-        nameCached: ''
-      }));
-    },
-    createCategory() {
-      // TODO: post /categories
+    async fetchCategories() {
+      try {
+        const { data } = await adminAPI.categories.get();
 
-      this.categories.push({
-        id: 5, // TODO: change
-        name: this.newCategoryName
-      });
-      this.newCategoryName = '';
-    },
-    deleteCategory(categoryId) {
-      // TODO: delete /categories/:id
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
 
-      this.categories = this.categories.filter(category => category.id !== categoryId);
+        this.categories = data.categories.map(category => ({
+          ...category,
+          isEditing: false,
+          nameCached: ''
+        }));
+      } catch (err) {
+        console.log(err);
+        Toast.fire({
+          icon: 'warning',
+          title: 'Unable to get category data, please try again later.'
+        });
+      }
+    },
+    async createCategory() {
+      try {
+        if (!this.newCategoryName.trim()) {
+          return Toast.fire({
+            icon: 'error',
+            title: 'Category name can not be empty'
+          });
+        }
+
+        this.isCreating = true;
+        const { data } = await adminAPI.categories.create({ name: this.newCategoryName });
+
+        if (data.status !== 'success') {
+          this.isCreating = false;
+          if (data.status === 'error') {
+            return Toast.fire({
+              icon: 'error',
+              title: data.message
+            });
+          }
+          throw new Error(data.message);
+        }
+
+        this.categories.unshift({
+          id: data.category.id,
+          name: data.category.name
+        });
+        this.newCategoryName = '';
+        Toast.fire({
+          icon: 'success',
+          title: `Create a category ${data.category.name} successfully!`
+        });
+        this.isCreating = false;
+        return null;
+      } catch (err) {
+        this.isCreating = false;
+        console.log(err);
+        return Toast.fire({
+          icon: 'warning',
+          title: 'Unable to create a category, please try again later.'
+        });
+      }
+    },
+    async deleteCategory(categoryId) {
+      try {
+        // double check before deleting a category
+        const result = await ConfirmDelete();
+        if (result.isConfirmed) {
+          const { data } = await adminAPI.categories.delete({ categoryId });
+
+          if (data.status !== 'success') {
+            if (data.status === 'error') {
+              return Toast.fire({
+                icon: 'error',
+                title: data.message
+              });
+            }
+            throw new Error(data.message);
+          }
+
+          Toast.fire({
+            icon: 'success',
+            title: 'Delete the category successfully!'
+          });
+          this.categories = this.categories.filter(category => category.id !== categoryId);
+        }
+        return null;
+      } catch (err) {
+        console.log(err);
+        return Toast.fire({
+          icon: 'warning',
+          title: 'Unable to delete the category, please try again later.'
+        });
+      }
     },
     toggleIsEditing(categoryId) {
       this.categories = this.categories.map(category => {
@@ -168,10 +222,40 @@ export default {
         return category;
       });
     },
-    updateCategory({ categoryId, name }) {
-      // TODO: put /categories/:id
-      console.log(name);
-      this.toggleIsEditing(categoryId);
+    async updateCategory({ categoryId, name }) {
+      try {
+        if (!name.trim()) {
+          return Toast.fire({
+            icon: 'error',
+            title: 'Category name can not be empty'
+          });
+        }
+
+        const { data } = await adminAPI.categories.update({ categoryId, name });
+
+        if (data.status !== 'success') {
+          if (data.status === 'error') {
+            return Toast.fire({
+              icon: 'error',
+              title: data.message
+            });
+          }
+          throw new Error(data.message);
+        }
+
+        this.toggleIsEditing(categoryId);
+        Toast.fire({
+          icon: 'success',
+          title: `Update the category to ${name} successfully!`
+        });
+        return null;
+      } catch (err) {
+        console.log(err);
+        return Toast.fire({
+          icon: 'warning',
+          title: 'Unable to update the category, please try again later.'
+        });
+      }
     },
     cancel(categoryId) {
       this.categories = this.categories.map(category => {

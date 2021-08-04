@@ -134,7 +134,7 @@ export default {
         this.isProcessing = false;
         return Toast.fire({
           icon: 'warning',
-          title: 'Incorrect email or password'
+          title: 'Unable to create an account, please try again later.'
         });
       }
     }
