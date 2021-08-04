@@ -92,14 +92,14 @@ export default {
     deleteComment(commentId) {
       this.restaurantComments = this.restaurantComments.filter(comment => comment.id !== commentId);
     },
-    addComment(payload) {
-      const { commentId, restaurantId, text } = payload;
+    addComment({ commentId, restaurantId, text }) {
       this.restaurantComments.push({
         id: commentId,
         RestaurantId: restaurantId,
         User: {
-          id: this.currentUser.currentUser.id,
-          name: this.currentUser.currentUser.name
+          id: this.currentUser.id,
+          name: this.currentUser.name,
+          image: this.currentUser.image
         },
         text,
         createdAt: new Date()

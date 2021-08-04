@@ -30,14 +30,9 @@
 </template>
 
 <script>
-const dummyUser = {
-  currentUser: {
-    id: 44,
-    name: 'user1',
-    email: 'user1@example.com',
-    isAdmin: true
-  }
-};
+import { mapState } from 'vuex';
+import commentsAPI from '../apis/comments';
+import { Toast, ConfirmDelete } from '../utils/helpers';
 
 export default {
   props: {
@@ -46,15 +41,38 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      currentUser: dummyUser.currentUser
-    };
+  computed: {
+    ...mapState(['currentUser'])
   },
   emits: ['delete-comment'],
   methods: {
-    deleteComment(commentId) {
-      this.$emit('delete-comment', commentId);
+    async deleteComment(commentId) {
+      try {
+        // double check before deleting a category
+        const result = await ConfirmDelete();
+        if (result.isConfirmed) {
+          const { data } = await commentsAPI.delete({ commentId });
+
+          if (data.status !== 'success') {
+            if (data.status === 'error') {
+              return Toast.fire({
+                icon: 'error',
+                title: data.message
+              });
+            }
+            throw new Error(data.message);
+          }
+
+          this.$emit('delete-comment', commentId);
+        }
+        return null;
+      } catch (err) {
+        console.log(err);
+        return Toast.fire({
+          icon: 'error',
+          title: 'Unable to delete the comment, please try again later.'
+        });
+      }
     }
   }
 };

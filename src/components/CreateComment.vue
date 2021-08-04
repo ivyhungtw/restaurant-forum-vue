@@ -14,6 +14,9 @@
 </template>
 
 <script>
+import commentsAPI from '../apis/comments';
+import { Toast } from '../utils/helpers';
+
 export default {
   name: 'CreateComment',
   props: {
@@ -28,19 +31,47 @@ export default {
     };
   },
   methods: {
-    submitComment() {
-      console.log(this.text);
+    async submitComment() {
+      try {
+        if (!this.text.trim() || this.text.trim().length < 50 || this.text.trim().length > 200) {
+          return Toast.fire({
+            icon: 'warning',
+            title: 'Your comment does not meet the required length.'
+          });
+        }
 
-      // TODO: fetch post comments API
-      // get commentId
+        const { data } = await commentsAPI.create({
+          text: this.text,
+          restaurantId: this.restaurantId
+        });
+        console.log('data', data);
 
-      this.$emit('add-comment', {
-        commentId: 100, // TODO: change
-        restaurantId: this.restaurantId,
-        text: this.text
-      });
+        if (data.status !== 'success') {
+          if (data.status === 'error') {
+            return Toast.fire({
+              icon: 'error',
+              title: data.message
+            });
+          }
+          throw new Error(data.message);
+        }
 
-      this.text = '';
+        this.$emit('add-comment', {
+          commentId: data.comment.id,
+          restaurantId: this.restaurantId,
+          text: this.text
+        });
+
+        this.text = '';
+
+        return null;
+      } catch (err) {
+        console.log(err);
+        return Toast.fire({
+          icon: 'error',
+          title: 'Unable to post a comment, please try again later.'
+        });
+      }
     }
   }
 };
