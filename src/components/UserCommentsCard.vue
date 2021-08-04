@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 col-lg-6 px-2 mb-3" style="background-color: white;">
-    <div class="border">
+    <div class="border" style="height: 100%;">
       <div
         class=" px-4 py-3"
         style="border-bottom: #cfcfcf9e solid 1px;

@@ -2,7 +2,7 @@
   <div class="container mt-5 pt-5">
     <div class="row">
       <!-- User Profile Card -->
-      <user-profile-card :user-profile="userProfile" :current-user-id="currentUserId" />
+      <user-profile-card :user-profile="userProfile" />
     </div>
     <div class="row">
       <!-- User Followings Card  -->
@@ -27,89 +27,16 @@ import UserFollowingsCard from '../components/UserFollowingsCard.vue';
 import UserFollowersCard from '../components/UserFollowersCard.vue';
 import UserCommentsCard from '../components/UserCommentsCard.vue';
 import UserFavRestaurantsCard from '../components/UserFavRestaurantsCard.vue';
-
-const dummyData = {
-  userProfile: {
-    id: 44,
-    name: 'user1',
-    email: 'user1@example.com',
-    image: 'https://i.imgur.com/zadqwVq.png'
-  },
-  userId: 44,
-  commentRestaurants: [
-    {
-      id: 1104,
-      image: 'https://loremflickr.com/320/240/restaurant,food?lock=215'
-    },
-    {
-      id: 1224,
-      image: 'https://loremflickr.com/320/240/restaurant,food?lock=377'
-    },
-    {
-      id: 1094,
-      image: 'https://loremflickr.com/320/240/restaurant,food?lock=85'
-    },
-    {
-      id: 1254,
-      image: 'https://loremflickr.com/320/240/restaurant,food?lock=128'
-    }
-  ],
-  followers: [
-    {
-      id: 34,
-      image: 'https://i.imgur.com/1jDf2Me.png',
-      Followship: {
-        followerId: 34,
-        followingId: 44,
-        createdAt: '2021-04-09T10:39:50.000Z',
-        updatedAt: '2021-04-09T10:39:50.000Z'
-      }
-    }
-  ],
-  followings: [
-    {
-      id: 34,
-      image: 'https://i.imgur.com/1jDf2Me.png',
-      Followship: {
-        followerId: 34,
-        followingId: 44,
-        createdAt: '2021-04-09T10:39:50.000Z',
-        updatedAt: '2021-04-09T10:39:50.000Z'
-      }
-    }
-  ],
-  favRestaurants: [
-    {
-      id: 1114,
-      image: 'https://loremflickr.com/320/240/restaurant,food?lock=963',
-      Favorite: {
-        UserId: 44,
-        RestaurantId: 1114,
-        createdAt: '2021-04-08T17:56:51.000Z',
-        updatedAt: '2021-04-08T17:56:51.000Z'
-      }
-    },
-    {
-      id: 1084,
-      image: 'https://loremflickr.com/320/240/restaurant,food?lock=930',
-      Favorite: {
-        UserId: 44,
-        RestaurantId: 1084,
-        createdAt: '2021-06-28T12:42:26.000Z',
-        updatedAt: '2021-06-28T12:42:26.000Z'
-      }
-    }
-  ]
-};
+import usersAPI from '../apis/users';
+import { Toast } from '../utils/helpers';
 
 export default {
   data() {
     return {
-      currentUserId: -1,
       userProfile: {},
       commentRestaurants: [],
       followers: [],
-      folloings: [],
+      followings: [],
       favRestaurants: []
     };
   },
@@ -121,28 +48,42 @@ export default {
     UserFavRestaurantsCard
   },
   methods: {
-    fetchUser(userId) {
-      console.log(userId);
-      // TODO: fetch users/:id API
+    async fetchUser(userId) {
+      try {
+        const { data } = await usersAPI.get(userId);
 
-      const { userProfile, commentRestaurants, followers, followings, favRestaurants } = dummyData;
-      this.userProfile = {
-        ...userProfile,
-        commentRestaurantsLength: commentRestaurants.length,
-        followersLength: followers.length,
-        followingsLength: followings.length,
-        favRestaurantsLength: favRestaurants.length
-      };
-      this.commentRestaurants = commentRestaurants;
-      this.followers = followers;
-      this.followings = followings;
-      this.favRestaurants = favRestaurants;
-      this.currentUserId = dummyData.userId;
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        const { userProfile, commentRestaurants, followers, followings, favRestaurants } = data;
+        this.userProfile = {
+          ...userProfile,
+          commentRestaurantsLength: commentRestaurants.length,
+          followersLength: followers.length,
+          followingsLength: followings.length,
+          favRestaurantsLength: favRestaurants.length
+        };
+        this.commentRestaurants = commentRestaurants;
+        this.followers = followers;
+        this.followings = followings;
+        this.favRestaurants = favRestaurants;
+      } catch (err) {
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to get user data, please try again later.'
+        });
+      }
     }
   },
   created() {
     const { id } = this.$route.params;
     this.fetchUser(id);
+  },
+  beforeRouteUpdate(to, from, next) {
+    const { id } = to.params;
+    this.fetchRestaurant(id);
+    next();
   }
 };
 </script>

@@ -22,9 +22,9 @@
         <strong>{{ userProfile.followersLength }}</strong> followers
       </div>
     </div>
-    <div v-if="currentUserId === userProfile.id">
+    <div v-if="currentUser.id === userProfile.id">
       <router-link
-        :to="{ name: 'user-profile-edit', params: { id: currentUserId } }"
+        :to="{ name: 'user-profile-edit', params: { id: currentUser.id } }"
         class="btn btn-primary"
         >edit</router-link
       >
@@ -33,16 +33,17 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   props: {
     userProfile: {
       type: Object,
       required: true
-    },
-    currentUserId: {
-      type: Number,
-      required: true
     }
+  },
+  computed: {
+    ...mapState(['currentUser'])
   }
 };
 </script>
