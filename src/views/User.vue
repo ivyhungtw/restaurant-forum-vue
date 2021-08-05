@@ -2,7 +2,7 @@
   <div class="container mt-5 pt-5">
     <div class="row">
       <!-- User Profile Card -->
-      <user-profile-card :user-profile="userProfile" />
+      <user-profile-card :user-profile="userProfile" :initial-following="isFollowed" />
     </div>
     <div class="row">
       <!-- User Followings Card  -->
@@ -37,7 +37,8 @@ export default {
       commentRestaurants: [],
       followers: [],
       followings: [],
-      favRestaurants: []
+      favRestaurants: [],
+      isFollowed: false
     };
   },
   components: {
@@ -56,7 +57,15 @@ export default {
           throw new Error(data.message);
         }
 
-        const { userProfile, commentRestaurants, followers, followings, favRestaurants } = data;
+        const {
+          userProfile,
+          commentRestaurants,
+          followers,
+          followings,
+          favRestaurants,
+          isFollowed
+        } = data;
+
         this.userProfile = {
           ...userProfile,
           commentRestaurantsLength: commentRestaurants.length,
@@ -68,6 +77,7 @@ export default {
         this.followers = followers;
         this.followings = followings;
         this.favRestaurants = favRestaurants;
+        this.isFollowed = isFollowed;
       } catch (err) {
         Toast.fire({
           icon: 'error',
