@@ -30,10 +30,11 @@
           <td v-else>user</td>
           <td>
             <button
-              v-if="user.isAdmin && user.id !== currentUserId"
+              v-if="user.isAdmin && user.id !== currentUser.id"
               type="button"
               class="btn btn-link"
-              @click="toggleRole(user.id)"
+              @click.prevent.stop="toggleRole(user.id)"
+              :disabled="isProcessing"
             >
               set as user
             </button>
@@ -41,7 +42,8 @@
               v-else-if="!user.isAdmin"
               type="button"
               class="btn btn-link"
-              @click="toggleRole(user.id)"
+              @click.prevent.stop="toggleRole(user.id)"
+              :disabled="isProcessing"
             >
               set as admin
             </button>
@@ -53,43 +55,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import AdminNav from '@/components/AdminNav.vue';
-
-const dummyData = {
-  users: [
-    {
-      id: 34,
-      name: 'root',
-      email: 'root@example.com',
-      password: '$2a$10$n8fVa5HYfOCLOiTpnZa8nuoNA1U.haz6W9jVk2W.D6D48obCHfiJu',
-      isAdmin: 1,
-      image: 'https://i.imgur.com/1jDf2Me.png',
-      createdAt: '2021-04-06T00:19:36.000Z',
-      updatedAt: '2021-04-17T19:31:04.000Z'
-    },
-    {
-      id: 44,
-      name: 'user1',
-      email: 'user1@example.com',
-      password: '$2a$10$QeeBEuHzbDV/nUagZk0KHe2.Kr4uAjxWhxJfDCQOgX2ZqDXID35W.',
-      isAdmin: 0,
-      image: 'https://i.imgur.com/zadqwVq.png',
-      createdAt: '2021-04-06T00:19:36.000Z',
-      updatedAt: '2021-04-06T00:26:32.000Z'
-    },
-    {
-      id: 54,
-      name: 'user2',
-      email: 'user2@example.com',
-      password: '$2a$10$E1xGl3bqIVT.OFSdwk8.SuGiuU4j5o2Q3fI4o2InjCuuita4plKiG',
-      isAdmin: 0,
-      image: 'https://i.imgur.com/mxyxsfQ.png',
-      createdAt: '2021-04-06T00:19:36.000Z',
-      updatedAt: '2021-04-06T00:27:29.000Z'
-    }
-  ],
-  id: 34
-};
+import adminAPI from '../apis/admin';
+import { Toast } from '../utils/helpers';
 
 export default {
   name: 'AdminUsers',
@@ -99,28 +68,67 @@ export default {
   data() {
     return {
       users: [],
-      currentUserId: -1
+      isProcessing: false
     };
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   created() {
     this.fetchUsers();
   },
   methods: {
-    fetchUsers() {
-      this.users = dummyData.users;
-      this.currentUserId = dummyData.id;
-    },
-    toggleRole(userId) {
-      // TODO: put /users/:id
-      this.users = this.users.map(user => {
-        if (user.id === userId) {
-          return {
-            ...user,
-            isAdmin: !user.isAdmin
-          };
+    async fetchUsers() {
+      try {
+        const { data } = await adminAPI.users.get();
+
+        if (data.status !== 'success') {
+          throw new Error(data.message);
         }
-        return user;
-      });
+
+        this.users = data.users;
+      } catch (err) {
+        console.log(err);
+        Toast.fire({
+          icon: 'error',
+          title: 'Unable to get users data, please try again later.'
+        });
+      }
+    },
+    async toggleRole(userId) {
+      try {
+        const { data } = await adminAPI.users.update({ userId });
+
+        if (data.status !== 'success') {
+          this.isProcessing = false;
+          if (data.status === 'error') {
+            return Toast.fire({
+              icon: 'error',
+              title: data.message
+            });
+          }
+          throw new Error(data.message);
+        }
+
+        this.users = this.users.map(user => {
+          if (user.id === userId) {
+            return {
+              ...user,
+              isAdmin: !user.isAdmin
+            };
+          }
+          return user;
+        });
+
+        return null;
+      } catch (err) {
+        this.isProcessing = false;
+        console.log(err);
+        return Toast.fire({
+          icon: 'error',
+          title: 'Unable to update user data, please try again later.'
+        });
+      }
     }
   }
 };

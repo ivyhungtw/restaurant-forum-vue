@@ -77,5 +77,21 @@ export default {
         }
       });
     }
+  },
+  users: {
+    get() {
+      return apiHelper.get('/admin/users', {
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      });
+    },
+    update({ userId }) {
+      return apiHelper.put(`/admin/users/${userId}`, null, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      });
+    }
   }
 };
