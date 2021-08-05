@@ -3,6 +3,14 @@ import Signin from '@/views/Signin.vue';
 import Restaurants from '@/views/Restaurants.vue';
 import store from '../store';
 
+const authenticatedAdmin = (to, from, next) => {
+  const { currentUser } = store.state;
+  if (currentUser && !currentUser.isAdmin) {
+    return next({ name: 'not-found' });
+  }
+  return next();
+};
+
 const routes = [
   {
     path: '/',
@@ -62,37 +70,44 @@ const routes = [
   {
     path: '/admin',
     exact: true,
-    redirect: '/admin/restaurants'
+    redirect: '/admin/restaurants',
+    beforeEnter: authenticatedAdmin
   },
   {
     path: '/admin/restaurants',
     name: 'admin-restaurants',
-    component: () => import('../views/AdminRestaurants.vue')
+    component: () => import('../views/AdminRestaurants.vue'),
+    beforeEnter: authenticatedAdmin
   },
   {
     path: '/admin/restaurants/new',
     name: 'admin-restaurant-new',
-    component: () => import('../views/AdminRestaurantNew.vue')
+    component: () => import('../views/AdminRestaurantNew.vue'),
+    beforeEnter: authenticatedAdmin
   },
   {
     path: '/admin/restaurants/:id/edit',
     name: 'admin-restaurant-edit',
-    component: () => import('../views/AdminRestaurantEdit.vue')
+    component: () => import('../views/AdminRestaurantEdit.vue'),
+    beforeEnter: authenticatedAdmin
   },
   {
     path: '/admin/restaurants/:id',
     name: 'admin-restaurant',
-    component: () => import('../views/AdminRestaurant.vue')
+    component: () => import('../views/AdminRestaurant.vue'),
+    beforeEnter: authenticatedAdmin
   },
   {
     path: '/admin/categories',
     name: 'admin-categories',
-    component: () => import('../views/AdminCategories.vue')
+    component: () => import('../views/AdminCategories.vue'),
+    beforeEnter: authenticatedAdmin
   },
   {
     path: '/admin/users',
     name: 'admin-users',
-    component: () => import('../views/AdminUsers.vue')
+    component: () => import('../views/AdminUsers.vue'),
+    beforeEnter: authenticatedAdmin
   },
   {
     path: '/:catchAll(.*)*',
@@ -107,10 +122,27 @@ const router = createRouter({
   linkExactActiveClass: 'active'
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  const token = localStorage.getItem('token');
+  const tokenInStore = store.state.token;
+  let { isAuthenticated } = store.state;
+
   // call action
-  store.dispatch('fetchCurrentUser');
-  next();
+  if (token && token !== tokenInStore) {
+    isAuthenticated = await store.dispatch('fetchCurrentUser');
+  }
+
+  const pathsWithoutAuth = ['signin', 'signup'];
+
+  if (!isAuthenticated && !pathsWithoutAuth.includes(to.name)) {
+    return next({ name: 'signin' });
+  }
+
+  if (isAuthenticated && pathsWithoutAuth.includes(to.name)) {
+    return next({ name: 'restaurants' });
+  }
+
+  return next();
 });
 
 export default router;

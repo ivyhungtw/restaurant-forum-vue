@@ -11,7 +11,8 @@ export default createStore({
         image: '',
         isAdmin: false
       },
-      isAuthenticated: false
+      isAuthenticated: false,
+      token: ''
     };
   },
   mutations: {
@@ -21,6 +22,13 @@ export default createStore({
         ...currentUser
       };
       state.isAuthenticated = true;
+      state.token = localStorage.getItem('token');
+    },
+    revokeAuthentication(state) {
+      state.currentUser = {};
+      state.isAuthenticated = false;
+      state.token = '';
+      localStorage.removeItem('token');
     }
   },
   actions: {
@@ -36,8 +44,12 @@ export default createStore({
 
         // call mutation
         commit('setCurrentUser', { id, name, email, image, isAdmin });
+
+        return true;
       } catch (err) {
         console.log(err.message);
+        commit('revokeAuthentication');
+        return false;
       }
     }
   },

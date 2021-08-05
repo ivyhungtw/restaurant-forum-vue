@@ -41,7 +41,11 @@
               </router-link>
             </li>
             <!-- Logout button -->
-            <button type="button" class="btn btn-sm btn-outline-primary my-2 my-sm-0">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-primary my-2 my-sm-0"
+              @click="logout"
+            >
               LOGOUT
             </button>
           </template>
@@ -62,6 +66,12 @@ import { mapState } from 'vuex';
 export default {
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
+  },
+  methods: {
+    logout() {
+      this.$store.commit('revokeAuthentication');
+      this.$router.push('/signin');
+    }
   }
 };
 </script>
