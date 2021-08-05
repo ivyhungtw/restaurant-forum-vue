@@ -2,6 +2,7 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
     <div class="container-fluid">
+      <!-- Brand -->
       <router-link class="navbar-brand" to="/">
         <i class="fas fa-tshirt fa-lg me-1"></i>
         Restaurant Forum
@@ -18,16 +19,21 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <!-- right -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <!-- Tabs -->
+          <li v-for="tab in tabs" :key="tab.title" class="nav-item me-3">
+            <router-link class="nav-link" aria-current="page" :to="{ name: tab.pathName }">
+              {{ tab.title }}
+            </router-link>
+          </li>
           <!-- is user is login -->
+        </ul>
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <template v-if="isAuthenticated">
             <!-- is user is admin -->
             <li class="nav-item me-3" v-if="currentUser.isAdmin">
-              <router-link
-                class="nav-link active"
-                aria-current="page"
-                :to="{ name: 'admin-restaurants' }"
-              >
+              <router-link class="nav-link" aria-current="page" :to="{ name: 'admin-restaurants' }">
                 ADMIN
               </router-link>
             </li>
@@ -64,6 +70,28 @@
 import { mapState } from 'vuex';
 
 export default {
+  data() {
+    return {
+      tabs: [
+        {
+          title: 'Home',
+          pathName: 'restaurants'
+        },
+        {
+          title: 'News Feed',
+          pathName: 'restaurants-feed'
+        },
+        {
+          title: 'Top Restaurants',
+          pathName: 'restaurants-top'
+        },
+        {
+          title: 'Top Users',
+          pathName: 'users-top'
+        }
+      ]
+    };
+  },
   computed: {
     ...mapState(['currentUser', 'isAuthenticated'])
   },

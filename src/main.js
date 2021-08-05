@@ -3,6 +3,7 @@ import moment from 'moment';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import './assets/application.css';
 
 const app = createApp(App);
 

@@ -1,8 +1,5 @@
 <template>
   <div class="container py-5">
-    <!-- Nav Tab -->
-    <nav-tabs />
-
     <restaurant-nav-pills :categories="categories" />
 
     <!-- Nav Pills -->
@@ -28,7 +25,6 @@
 </template>
 
 <script>
-import NavTabs from '../components/NavTabs.vue';
 import RestaurantCard from '../components/RestaurantCard.vue';
 import RestaurantNavPills from '../components/RestaurantNavPills.vue';
 import RestaurantPagination from '../components/RestaurantPagination.vue';
@@ -49,7 +45,6 @@ export default {
     };
   },
   components: {
-    NavTabs,
     RestaurantCard,
     RestaurantNavPills,
     RestaurantPagination

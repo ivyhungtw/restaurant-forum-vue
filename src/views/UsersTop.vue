@@ -1,7 +1,5 @@
 <template>
   <div class="container py-5">
-    <!-- Nav Tab -->
-    <nav-tabs />
     <h1 class="mt-5">
       Top Users
     </h1>
@@ -19,7 +17,6 @@
 </template>
 
 <script>
-import NavTabs from '../components/NavTabs.vue';
 import UserCard from '../components/UserCard.vue';
 import usersAPI from '../apis/users';
 import { Toast } from '../utils/helpers';
@@ -32,7 +29,6 @@ export default {
     };
   },
   components: {
-    NavTabs,
     UserCard
   },
   methods: {
