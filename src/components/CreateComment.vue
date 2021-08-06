@@ -46,7 +46,6 @@ export default {
           text: this.text,
           restaurantId: this.restaurantId
         });
-        console.log('data', data);
 
         if (data.status !== 'success') {
           if (data.status === 'error') {

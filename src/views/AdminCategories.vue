@@ -1,113 +1,122 @@
 <template>
   <div class="container py-5">
-    <!-- Admin Nav -->
-    <AdminNav />
+    <!-- Spinner -->
+    <spinner v-if="isLoading" />
+    <template v-else>
+      <!-- Admin Nav -->
+      <AdminNav />
 
-    <form class="my-4">
-      <div class="row">
-        <div class="col-auto">
-          <input
-            type="text"
-            v-model="newCategoryName"
-            class="form-control"
-            placeholder="Create category..."
-          />
-        </div>
-        <div class="col-auto">
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click.prevent.stop="createCategory"
-            :disabled="isCreating"
-          >
-            Create
-          </button>
-        </div>
-      </div>
-    </form>
-    <table class="table table-striped">
-      <thead class="table-dark">
-        <tr>
-          <th scope="col" width="60">
-            #
-          </th>
-          <th scope="col">
-            Category Name
-          </th>
-          <th scope="col" width="210">
-            Action
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="category in categories" :key="category.id">
-          <th scope="row">
-            {{ category.id }}
-          </th>
-          <td class="position-relative">
-            <div v-show="!category.isEditing" class="category-name">
-              {{ category.name }}
-            </div>
+      <form class="my-4">
+        <div class="row">
+          <div class="col-auto">
             <input
-              v-show="category.isEditing"
-              v-model="category.name"
               type="text"
+              v-model="newCategoryName"
               class="form-control"
+              placeholder="Create category..."
             />
-            <span
-              v-show="category.isEditing"
-              class="cancel"
-              @click.prevent.stop="cancel(category.id)"
-            >
-              ✕
-            </span>
-          </td>
-          <td class="d-flex justify-content-between">
-            <button
-              v-show="!category.isEditing"
-              type="button"
-              class="btn btn-link mr-2"
-              @click="toggleIsEditing(category.id)"
-            >
-              Edit
-            </button>
-            <button
-              v-show="category.isEditing"
-              type="button"
-              class="btn btn-link mr-2"
-              @click.stop.prevent="updateCategory({ categoryId: category.id, name: category.name })"
-            >
-              Save
-            </button>
+          </div>
+          <div class="col-auto">
             <button
               type="button"
-              class="btn btn-link mr-2"
-              @click.stop.prevent="deleteCategory(category.id)"
+              class="btn btn-primary"
+              @click.prevent.stop="createCategory"
+              :disabled="isCreating"
             >
-              Delete
+              Create
             </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+        </div>
+      </form>
+      <table class="table table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" width="60">
+              #
+            </th>
+            <th scope="col">
+              Category Name
+            </th>
+            <th scope="col" width="210">
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="category in categories" :key="category.id">
+            <th scope="row">
+              {{ category.id }}
+            </th>
+            <td class="position-relative">
+              <div v-show="!category.isEditing" class="category-name">
+                {{ category.name }}
+              </div>
+              <input
+                v-show="category.isEditing"
+                v-model="category.name"
+                type="text"
+                class="form-control"
+              />
+              <span
+                v-show="category.isEditing"
+                class="cancel"
+                @click.prevent.stop="cancel(category.id)"
+              >
+                ✕
+              </span>
+            </td>
+            <td class="d-flex justify-content-between">
+              <button
+                v-show="!category.isEditing"
+                type="button"
+                class="btn btn-link mr-2"
+                @click="toggleIsEditing(category.id)"
+              >
+                Edit
+              </button>
+              <button
+                v-show="category.isEditing"
+                type="button"
+                class="btn btn-link mr-2"
+                @click.stop.prevent="
+                  updateCategory({ categoryId: category.id, name: category.name })
+                "
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                class="btn btn-link mr-2"
+                @click.stop.prevent="deleteCategory(category.id)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
   </div>
 </template>
 
 <script>
 import AdminNav from '@/components/AdminNav.vue';
+import Spinner from '../components/Spinner.vue';
 import adminAPI from '../apis/admin';
 import { Toast, ConfirmDelete } from '../utils/helpers';
 
 export default {
   name: 'AdminCategory',
   components: {
-    AdminNav
+    AdminNav,
+    Spinner
   },
   data() {
     return {
       categories: [],
       newCategoryName: '',
-      isCreating: false
+      isCreating: false,
+      isLoading: true
     };
   },
   created() {
@@ -116,6 +125,7 @@ export default {
   methods: {
     async fetchCategories() {
       try {
+        this.isLoading = true;
         const { data } = await adminAPI.categories.get();
 
         if (data.status !== 'success') {
@@ -127,7 +137,9 @@ export default {
           isEditing: false,
           nameCached: ''
         }));
+        this.isLoading = false;
       } catch (err) {
+        this.isLoading = false;
         console.log(err);
         Toast.fire({
           icon: 'warning',

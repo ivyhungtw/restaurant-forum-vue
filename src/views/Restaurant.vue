@@ -1,15 +1,19 @@
 <template>
   <div class="container py-5">
-    <!-- RestaurantDetail -->
-    <restaurant-detail :initial-restaurant="restaurant" />
-    <hr />
-    <!-- RestaurantComments -->
-    <restaurant-comments
-      :restaurant-comments="restaurantComments"
-      @delete-comment="deleteComment"
-    />
-    <!-- CreateComment -->
-    <create-comment :restaurant-id="restaurant.id" @add-comment="addComment" />
+    <!-- Spinner -->
+    <spinner v-if="isLoading" />
+    <template v-else>
+      <!-- RestaurantDetail -->
+      <restaurant-detail :initial-restaurant="restaurant" />
+      <hr />
+      <!-- RestaurantComments -->
+      <restaurant-comments
+        :restaurant-comments="restaurantComments"
+        @delete-comment="deleteComment"
+      />
+      <!-- CreateComment -->
+      <create-comment :restaurant-id="restaurant.id" @add-comment="addComment" />
+    </template>
   </div>
 </template>
 
@@ -18,6 +22,7 @@ import { mapState } from 'vuex';
 import RestaurantDetail from '../components/RestaurantDetail.vue';
 import RestaurantComments from '../components/RestaurantComments.vue';
 import CreateComment from '../components/CreateComment.vue';
+import Spinner from '../components/Spinner.vue';
 import restaurantAPI from '../apis/restaurants';
 import { Toast } from '../utils/helpers';
 
@@ -37,7 +42,8 @@ export default {
         isFavorited: false,
         isLiked: false
       },
-      restaurantComments: []
+      restaurantComments: [],
+      isLoading: true
     };
   },
   computed: {
@@ -46,11 +52,13 @@ export default {
   components: {
     RestaurantDetail,
     RestaurantComments,
-    CreateComment
+    CreateComment,
+    Spinner
   },
   methods: {
     async fetchRestaurant(restaurantId) {
       try {
+        this.isLoading = true;
         const { data } = await restaurantAPI.getRestaurant({ restaurantId });
 
         if (data.status !== 'success') {
@@ -78,8 +86,10 @@ export default {
           isLiked
         };
         this.restaurantComments = restaurant.Comments;
+        this.isLoading = false;
         return null;
       } catch (err) {
+        this.isLoading = false;
         console.log(err);
         return Toast.fire({
           icon: 'error',

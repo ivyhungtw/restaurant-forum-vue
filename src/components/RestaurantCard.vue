@@ -1,10 +1,11 @@
 <template>
-  <div class="card">
+  <div v-show="!isLoading" class="card">
     <div class="rest-img-container">
       <img
         class="rest-img-top"
         :src="$filter.emptyImageFilter(restaurant.image)"
         alt="Card image cap"
+        @load="changeLoading"
       />
       <!-- Detail button -->
       <div class="rest-card-button">
@@ -68,10 +69,14 @@ export default {
   },
   data() {
     return {
-      restaurant: this.initialRestuarant
+      restaurant: this.initialRestuarant,
+      isLoading: true
     };
   },
   methods: {
+    changeLoading() {
+      this.isLoading = false;
+    },
     async addFavorite(restaurantId) {
       try {
         const { data } = await restaurantsAPI.addFavorite({ restaurantId });

@@ -1,5 +1,7 @@
 <template>
-  <table class="table table-striped">
+  <!-- Spinner -->
+  <spinner v-if="isLoading" />
+  <table v-else class="table table-striped">
     <thead class="table-dark">
       <tr>
         <th scope="col">
@@ -50,14 +52,19 @@
 </template>
 
 <script>
+import Spinner from './Spinner.vue';
 import adminAPI from '../apis/admin';
 import { Toast, ConfirmDelete } from '../utils/helpers';
 
 export default {
   data() {
     return {
-      restaurants: []
+      restaurants: [],
+      isLoading: true
     };
+  },
+  components: {
+    Spinner
   },
   created() {
     this.fetchRestaurants();
@@ -65,9 +72,12 @@ export default {
   methods: {
     async fetchRestaurants() {
       try {
+        this.isLoading = true;
         const { data } = await adminAPI.restaurants.get();
         this.restaurants = data.restaurants;
+        this.isLoading = false;
       } catch (err) {
+        this.isLoading = false;
         console.log(err);
         Toast.fire({
           icon: 'error',

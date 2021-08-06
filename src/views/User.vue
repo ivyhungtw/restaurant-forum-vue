@@ -1,23 +1,27 @@
 <template>
   <div class="container mt-5 pt-5">
-    <div class="row">
-      <!-- User Profile Card -->
-      <user-profile-card :user-profile="userProfile" :initial-following="isFollowed" />
-    </div>
-    <div class="row">
-      <!-- User Followings Card  -->
-      <user-followings-card :followings="followings" />
+    <!-- Spinner -->
+    <spinner v-if="isLoading" />
+    <template v-else>
+      <div class="row">
+        <!-- User Profile Card -->
+        <user-profile-card :user-profile="userProfile" :initial-following="isFollowed" />
+      </div>
+      <div class="row">
+        <!-- User Followings Card  -->
+        <user-followings-card :followings="followings" />
 
-      <!-- User Followers Card -->
-      <user-followers-card :followers="followers" />
-    </div>
-    <div class="row mb-3">
-      <!-- User Comments Card  -->
-      <user-comments-card :restaurants="commentRestaurants" />
+        <!-- User Followers Card -->
+        <user-followers-card :followers="followers" />
+      </div>
+      <div class="row mb-3">
+        <!-- User Comments Card  -->
+        <user-comments-card :restaurants="commentRestaurants" />
 
-      <!-- User Fav Restaurants Card -->
-      <user-fav-restaurants-card :restaurants="favRestaurants" />
-    </div>
+        <!-- User Fav Restaurants Card -->
+        <user-fav-restaurants-card :restaurants="favRestaurants" />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -27,6 +31,7 @@ import UserFollowingsCard from '../components/UserFollowingsCard.vue';
 import UserFollowersCard from '../components/UserFollowersCard.vue';
 import UserCommentsCard from '../components/UserCommentsCard.vue';
 import UserFavRestaurantsCard from '../components/UserFavRestaurantsCard.vue';
+import Spinner from '../components/Spinner.vue';
 import usersAPI from '../apis/users';
 import { Toast } from '../utils/helpers';
 
@@ -38,7 +43,8 @@ export default {
       followers: [],
       followings: [],
       favRestaurants: [],
-      isFollowed: false
+      isFollowed: false,
+      isLoading: true
     };
   },
   components: {
@@ -46,11 +52,13 @@ export default {
     UserFollowingsCard,
     UserFollowersCard,
     UserCommentsCard,
-    UserFavRestaurantsCard
+    UserFavRestaurantsCard,
+    Spinner
   },
   methods: {
     async fetchUser(userId) {
       try {
+        this.isLoading = true;
         const { data } = await usersAPI.get(userId);
 
         if (data.status !== 'success') {
@@ -78,7 +86,9 @@ export default {
         this.followings = followings;
         this.favRestaurants = favRestaurants;
         this.isFollowed = isFollowed;
+        this.isLoading = false;
       } catch (err) {
+        this.isLoading = false;
         Toast.fire({
           icon: 'error',
           title: 'Unable to get user data, please try again later.'

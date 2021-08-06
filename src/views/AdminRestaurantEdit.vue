@@ -1,23 +1,29 @@
 <template>
   <div class="container py-5">
-    <!-- Admin Restaurant Form -->
-    <admin-restaurant-form
-      :initial-restaurant="restaurant"
-      @submit-form="submitForm"
-      :is-processing="isProcessing"
-    />
+    <!-- Spinner -->
+    <spinner v-if="isLoading" />
+    <template v-else>
+      <!-- Admin Restaurant Form -->
+      <admin-restaurant-form
+        :initial-restaurant="restaurant"
+        @submit-form="submitForm"
+        :is-processing="isProcessing"
+      />
+    </template>
   </div>
 </template>
 
 <script>
 import AdminRestaurantForm from '../components/AdminRestaurantForm.vue';
+import Spinner from '../components/Spinner.vue';
 import adminAPI from '../apis/admin';
 import { Toast } from '../utils/helpers';
 
 export default {
   name: 'AdminRestaurantEdit',
   components: {
-    AdminRestaurantForm
+    AdminRestaurantForm,
+    Spinner
   },
   data() {
     return {
@@ -31,7 +37,8 @@ export default {
         image: '',
         CategoryId: -1
       },
-      isProcessing: false
+      isProcessing: false,
+      isLoading: true
     };
   },
   created() {
@@ -46,6 +53,7 @@ export default {
   methods: {
     async fetchRestaurant(restaurantId) {
       try {
+        this.isLoading = true;
         const { data } = await adminAPI.restaurants.getDetail({ restaurantId });
         const {
           id,
@@ -68,7 +76,9 @@ export default {
           image,
           categoryId
         };
+        this.isLoading = false;
       } catch (err) {
+        this.isLoading = false;
         Toast.fire({
           icon: 'error',
           title: 'Unable to get restaurant data, please try again later.'
@@ -109,8 +119,6 @@ export default {
           title: 'Unable to update restaurant data, please try again later.'
         });
       }
-      // TODO: post /restaurants
-      console.log(formData);
     }
   }
 };
