@@ -63,6 +63,14 @@ export default {
       restaurant: this.initialRestaurant
     };
   },
+  watch: {
+    initialRestaurant(newValue) {
+      this.restaurant = {
+        ...this.restaurant,
+        ...newValue
+      };
+    }
+  },
   methods: {
     async addFavorite(restaurantId) {
       try {
@@ -74,7 +82,7 @@ export default {
         this.restaurant = {
           ...this.restaurant,
           isFavorited: true,
-          favCount: this.favCount ? this.favCount + 1 : 1
+          favCount: this.restaurant.favCount ? this.restaurant.favCount + 1 : 1
         };
       } catch (err) {
         Toast.fire({
@@ -92,7 +100,7 @@ export default {
 
         this.restaurant = {
           ...this.restaurant,
-          favCount: Number(this.favCount) - 1,
+          favCount: this.restaurant.favCount - 1,
           isFavorited: false
         };
       } catch (err) {
