@@ -8,7 +8,7 @@
     </div>
     <div class="d-flex align-items-center justify-content-between">
       <button type="button" class="btn btn-link" @click="$router.back()">Back</button>
-      <button type="submit" class="btn btn-primary mr-0">
+      <button type="submit" class="btn btn-primary mr-0" :disabled="isProcessing">
         Submit
       </button>
     </div>
@@ -29,7 +29,8 @@ export default {
   },
   data() {
     return {
-      text: ''
+      text: '',
+      isProcessing: false
     };
   },
   methods: {
@@ -42,12 +43,15 @@ export default {
           });
         }
 
+        this.isProcessing = true;
+
         const { data } = await commentsAPI.create({
           text: this.text,
           restaurantId: this.restaurantId
         });
 
         if (data.status !== 'success') {
+          this.isProcessing = false;
           if (data.status === 'error') {
             return Toast.fire({
               icon: 'error',
@@ -65,8 +69,10 @@ export default {
 
         this.text = '';
 
+        this.isProcessing = false;
         return null;
       } catch (err) {
+        this.isProcessing = false;
         console.log(err);
         return Toast.fire({
           icon: 'error',

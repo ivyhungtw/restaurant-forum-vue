@@ -102,7 +102,7 @@ export default {
   },
   beforeRouteUpdate(to, from, next) {
     const { id } = to.params;
-    this.fetchRestaurant(id);
+    this.fetchUser(id);
     next();
   }
 };
