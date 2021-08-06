@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const baseURL = 'https://restaurant-forum-express-demo.herokuapp.com/api';
+const baseURL = 'https://forum-express-vue.herokuapp.com/api';
 
 const axiosInstance = axios.create({ baseURL });
 
