@@ -1,11 +1,13 @@
 <template>
   <form @submit.prevent.stop="submitComment">
     <div class="form-group mb-4">
-      <label for="text">留下評論：</label>
+      <label class="mb-2 form-label" for="text"
+        >Leave your comment：(must be greater than 50 and less than 200 characters)</label
+      >
       <textarea v-model="text" class="form-control" rows="3" name="text" />
     </div>
     <div class="d-flex align-items-center justify-content-between">
-      <button type="button" class="btn btn-link" @click="$router.back()">回上一頁</button>
+      <button type="button" class="btn btn-link" @click="$router.back()">Back</button>
       <button type="submit" class="btn btn-primary mr-0">
         Submit
       </button>
@@ -76,3 +78,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.form-group {
+  margin: 21px 0 8px;
+}
+</style>

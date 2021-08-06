@@ -5,25 +5,33 @@
     </h2>
 
     <div>
-      <blockquote v-for="comment in restaurantComments" :key="comment.id" class="blockquote mb-0">
-        <button
-          v-if="currentUser.isAdmin"
-          type="button"
-          class="btn btn-danger float-end"
-          @click.prevent.stop="deleteComment(comment.id)"
-        >
-          Delete
-        </button>
-        <h3>
-          <router-link :to="{ name: 'user-profile', params: { id: comment.User.id } }">
-            {{ comment.User.name }}
-          </router-link>
-        </h3>
-        <p>{{ comment.text }}</p>
-        <footer class="blockquote-footer">
-          {{ $filter.fromNow(comment.createdAt) }}
-        </footer>
-      </blockquote>
+      <div v-for="comment in restaurantComments" :key="comment.id">
+        <div class="people-comment-wrapper">
+          <div class="people-avatar pt-1">
+            <img :src="$filter.emptyImageFilter(comment.User.image)" alt="" />
+          </div>
+          <div class="people-comment">
+            <div class="people-comment-container">
+              <div class="people-name">
+                <router-link :to="{ name: 'user-profile', params: { id: comment.User.id } }">
+                  {{ comment.User.name }}
+                </router-link>
+              </div>
+              <div class="people-saying">{{ comment.text }}</div>
+              <span
+                v-if="currentUser.isAdmin"
+                class="delete-btn"
+                @click.prevent.stop="deleteComment(comment.id)"
+              >
+                <i class="fas fa-trash-alt"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="date-wrapper">
+          <div class="days-comment">- {{ $filter.fromNow(comment.createdAt) }}</div>
+        </div>
+      </div>
       <hr />
     </div>
   </div>
@@ -77,3 +85,79 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+h2.my-4 {
+  margin-bottom: 1rem !important;
+  font-size: 18px;
+}
+
+h3 {
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+
+.comment-container {
+  border-radius: 10px;
+  position: relative;
+}
+
+.delete-btn {
+  position: absolute;
+  top: -10px;
+  right: -3px;
+  cursor: pointer;
+}
+
+.delete-btn:hover i {
+  color: #bd2333;
+}
+
+/* Comments */
+.people-comment-wrapper {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 12px;
+}
+
+.people-avatar img {
+  width: 32px;
+  height: 32px;
+  display: block;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.people-comment {
+  background-color: #f2f3f5;
+  border-radius: 16px;
+  padding: 8px 12px;
+  color: #1c1e21;
+  position: relative;
+}
+
+.people-comment-container {
+  display: flex;
+  font-size: 14px;
+}
+
+.people-name {
+  font-weight: bolder;
+  color: #365899;
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+.people-name a:hover {
+  text-decoration: underline;
+}
+
+.date-wrapper {
+  display: flex;
+  align-items: center;
+  color: #90949c;
+  font-size: 13px;
+  margin-left: 50px;
+  margin-top: 4px;
+}
+</style>

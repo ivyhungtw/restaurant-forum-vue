@@ -6,12 +6,10 @@
         {{ restaurant.categoryName }}
       </p>
     </div>
-    <div class="col-lg-4">
-      <img
-        class="img-responsive center-block"
-        :src="$filter.emptyImageFilter(restaurant.image)"
-        style="width: 250px;margin-bottom: 25px;"
-      />
+    <div class="col-md-8 col-lg-6 col-xl-4 mb-3">
+      <img class="img-responsive center-block" :src="$filter.emptyImageFilter(restaurant.image)" />
+    </div>
+    <div class="col-lg-6">
       <div class="contact-info-wrap">
         <ul class="list-unstyled">
           <li>
@@ -28,8 +26,6 @@
           </li>
         </ul>
       </div>
-    </div>
-    <div class="col-lg-8">
       <p>{{ restaurant.description }}</p>
       <router-link
         class="btn btn-primary btn-border me-2"
@@ -175,3 +171,21 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.col-lg-8 p,
+.contact-info-wrap li,
+.contact-info-wrap strong {
+  font-family: serif;
+  font-size: 17px;
+}
+
+img {
+  width: 100%;
+  height: 300px;
+  display: block;
+  object-fit: cover;
+  opacity: 1;
+  /* transition: opacity 0.3s ease-out; */
+}
+</style>
