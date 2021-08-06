@@ -4,7 +4,7 @@
     <div class="container-fluid">
       <!-- Brand -->
       <router-link class="navbar-brand" to="/">
-        <i class="fas fa-tshirt fa-lg me-1"></i>
+        <i class="fas fa-utensils fa-lg me-1"></i>
         Restaurant Forum
       </router-link>
       <button

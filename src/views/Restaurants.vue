@@ -1,15 +1,28 @@
 <template>
-  <div class="container py-5">
-    <restaurant-nav-pills :categories="categories" />
+  <div class="py-5 row g-0 mx-auto">
+    <!-- Title -->
+    <div class="title text-center col-12 p-5 mb-3">
+      <h1 class="mb-3">Explore Local Restaurants</h1>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Lectus magna fringilla urna porttitor rhoncus. Tellus orci ac
+        auctor augue mauris.
+      </p>
+    </div>
+    <div class="col-md-2">
+      <restaurant-nav-pills :categories="categories" />
+    </div>
 
     <!-- Nav Pills -->
-    <div class="row">
-      <!-- Restaurant Card -->
-      <restaurant-card
-        v-for="restaurant in restaurants"
-        :key="restaurant.id"
-        :initialRestuarant="restaurant"
-      />
+    <div class="px-4 col-md-10 mb-4">
+      <div class="rest-card-wrapper">
+        <!-- Restaurant Card -->
+        <restaurant-card
+          v-for="restaurant in restaurants"
+          :key="restaurant.id"
+          :initialRestuarant="restaurant"
+        />
+      </div>
     </div>
 
     <!-- Pagination -->
@@ -82,3 +95,16 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.rest-card-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(325px, 1fr));
+  grid-gap: 1.5rem;
+  width: 100%;
+}
+
+.title {
+  color: #f3f3cd;
+}
+</style>
