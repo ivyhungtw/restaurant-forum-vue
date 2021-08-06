@@ -1,8 +1,14 @@
 <template>
   <div class="container py-5">
-    <h1 class="mt-5">
-      Top Restaurants
-    </h1>
+    <!-- Title -->
+    <div class="title text-center col-12 p-5 mb-3">
+      <h1 class="mb-3">Top Restaurants</h1>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Lectus magna fringilla urna porttitor rhoncus. Tellus orci ac
+        auctor augue mauris.
+      </p>
+    </div>
 
     <hr />
     <!-- Top Restaurant List -->

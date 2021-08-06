@@ -1,8 +1,8 @@
 <template>
   <div class="col-3">
-    <a href="#">
+    <router-link :to="{ name: 'user-profile', params: { id: user.id } }">
       <img :src="$filter.emptyImageFilter(user.image)" />
-    </a>
+    </router-link>
     <h2>{{ user.name }}</h2>
     <span class="badge bg-secondary">followers：{{ user.followerCount || 0 }}</span>
     <p v-if="currentUserId !== user.id" class="mt-3">

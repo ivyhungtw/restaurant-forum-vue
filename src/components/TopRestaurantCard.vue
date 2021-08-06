@@ -2,13 +2,13 @@
   <div class="card mb-3" style="max-width: 540px;margin: auto;">
     <div class="row no-gutters">
       <div class="col-md-4">
-        <a href="#">
+        <router-link :to="{ name: 'restaurant', params: { id: restaurant.id } }">
           <img
             class="card-img"
             :src="$filter.emptyImageFilter(restaurant.image)"
             style="height: 100%; object-fit: cover;"
           />
-        </a>
+        </router-link>
       </div>
       <div class="col-md-8">
         <div class="card-body">
