@@ -12,13 +12,18 @@
           orci ac auctor augue mauris.
         </p>
       </div>
+
+      <!-- Nav Pills -->
       <div class="col-md-2">
         <restaurant-nav-pills :categories="categories" />
       </div>
 
-      <!-- Nav Pills -->
+      <!-- Restaurant List -->
       <div class="px-4 col-md-10 mb-4">
         <div class="rest-card-wrapper">
+          <div class="text-center" v-if="totalPage.length < 1">
+            There is no restaruant for this category.
+          </div>
           <!-- Restaurant Card -->
           <restaurant-card
             v-for="restaurant in restaurants"

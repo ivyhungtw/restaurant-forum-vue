@@ -70,7 +70,9 @@ export default {
   data() {
     return {
       restaurant: this.initialRestuarant,
-      isLoading: true
+      isLoading: true,
+      isSaving: false,
+      isLiking: false
     };
   },
   methods: {
@@ -79,6 +81,9 @@ export default {
     },
     async addFavorite(restaurantId) {
       try {
+        if (this.isSaving) return;
+
+        this.isSaving = true;
         const { data } = await restaurantsAPI.addFavorite({ restaurantId });
         if (data.status !== 'success') {
           throw new Error(data.message);
@@ -88,7 +93,9 @@ export default {
           ...this.restaurant,
           isFavorited: true
         };
+        this.isSaving = false;
       } catch (err) {
+        this.isSaving = false;
         Toast.fire({
           icon: 'error',
           title: 'Unable to add the restaurant to your favorite list, please try again later.'
@@ -97,6 +104,9 @@ export default {
     },
     async removeFavorite(restaurantId) {
       try {
+        if (this.isSaving) return;
+
+        this.isSaving = true;
         const { data } = await restaurantsAPI.removeFavorite({ restaurantId });
         if (data.status !== 'success') {
           throw new Error(data.message);
@@ -106,7 +116,9 @@ export default {
           ...this.restaurant,
           isFavorited: false
         };
+        this.isSaving = false;
       } catch (err) {
+        this.isSaving = false;
         Toast.fire({
           icon: 'error',
           title: 'Unable to remove the restaurant from your favorite list, please try again later.'
@@ -115,6 +127,9 @@ export default {
     },
     async like(restaurantId) {
       try {
+        if (this.Liking) return;
+
+        this.Liking = true;
         const { data } = await restaurantsAPI.like({ restaurantId });
         if (data.status !== 'success') {
           throw new Error(data.message);
@@ -124,7 +139,9 @@ export default {
           ...this.restaurant,
           isLiked: true
         };
+        this.Liking = false;
       } catch (err) {
+        this.Liking = false;
         Toast.fire({
           icon: 'error',
           title: 'Unable to like the restaurant, please try again later.'
@@ -133,6 +150,9 @@ export default {
     },
     async unlike(restaurantId) {
       try {
+        if (this.Liking) return;
+
+        this.Liking = true;
         const { data } = await restaurantsAPI.unlike({ restaurantId });
 
         if (data.status !== 'success') {
@@ -143,7 +163,9 @@ export default {
           ...this.restaurant,
           isLiked: false
         };
+        this.Liking = false;
       } catch (err) {
+        this.Liking = false;
         Toast.fire({
           icon: 'error',
           title: 'Unable to unlike the restaurant, please try again later.'
