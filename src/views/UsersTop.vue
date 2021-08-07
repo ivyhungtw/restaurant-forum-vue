@@ -13,7 +13,7 @@
         </p>
       </div>
       <hr />
-      <div class="row text-center justify-content-center">
+      <div class="user-container row text-center mt-5">
         <!-- User Card -->
         <user-card
           v-for="initialUser in topUsers"
