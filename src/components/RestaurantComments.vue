@@ -121,6 +121,7 @@ h3 {
 }
 
 .people-avatar img {
+  object-fit: cover;
   width: 32px;
   height: 32px;
   display: block;

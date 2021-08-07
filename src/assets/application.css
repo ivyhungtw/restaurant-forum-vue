@@ -27,7 +27,7 @@ a:hover {
 .page-link:focus,
 .form-control:focus,
 .btn,
-.navbar-dark .navbar-toggler {
+.navbar-light .navbar-toggler {
   outline: none;
   box-shadow: none;
 }
@@ -41,8 +41,8 @@ a:hover {
   min-width: 85px;
   padding: 7px 14px;
   font-size: 14px;
-  color: white;
-  background-color: #bd2333;
+  color: #bd2333;
+  background: transparent;
   border: 2px solid #bd2333;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -51,8 +51,9 @@ a:hover {
 .btn-border,
 .btn:hover,
 .btn-primary:hover {
-  background: transparent;
-  color: #bd2333;
+  background-color: #bd2333;
+  color: white;
+
   text-decoration: none;
   border: 2px solid #bd2333;
 }
@@ -92,7 +93,8 @@ a:hover {
 }
 
 h1,
-.card-text {
+.card-text,
+.navbar-brand {
   font-family: serif;
 }
 

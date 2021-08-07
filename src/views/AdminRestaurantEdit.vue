@@ -114,6 +114,7 @@ export default {
           this.$router.push({ name: 'admin-restaurants' });
         }
       } catch (err) {
+        this.isProcessing = false;
         Toast.fire({
           icon: 'error',
           title: 'Unable to update restaurant data, please try again later.'

@@ -1,11 +1,11 @@
 <template>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
     <div class="container-fluid">
       <!-- Brand -->
       <router-link class="navbar-brand" to="/">
-        <i class="fas fa-utensils fa-lg me-1"></i>
-        Restaurant Forum
+        <img src="https://imgur.com/eGg5sYc.png" id="logo" class="me-1" alt="logo" />
+        FOODMATE
       </router-link>
       <button
         class="navbar-toggler"
@@ -38,12 +38,12 @@
               </router-link>
             </li>
             <!-- is user is not admin -->
-            <li class="nav-item me-3" v-if="!currentUser.isAdmin">
+            <li class="nav-item me-3">
               <router-link
                 :to="{ name: 'user-profile', params: { id: currentUser.id } }"
-                class="text-white nav-link"
+                class="nav-link"
               >
-                Hi, {{ currentUser.name || 'User' }}
+                PROFILE
               </router-link>
             </li>
             <!-- Logout button -->
@@ -103,3 +103,40 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+nav {
+  padding: 14px 16px;
+}
+
+#logo {
+  width: 50px;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  padding: 0;
+}
+
+.navbar-brand:hover {
+  color: #4d4d4d;
+}
+
+.navbar-brand,
+.nav-item .nav-link {
+  color: #4d4d4d;
+}
+
+.nav-item:hover .nav-link {
+  color: #bd2333;
+}
+
+.nav-item .nav-link.active,
+.nav-item .show > .nav-link {
+  color: #4d4d4d;
+  border-width: 2px;
+  border-bottom: 1px solid #bd2333;
+  border-radius: 0;
+  background-color: transparent;
+}
+</style>
