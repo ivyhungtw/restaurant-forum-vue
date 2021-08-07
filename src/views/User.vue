@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5 pt-5">
+  <div class="container mt-5 pt-5" id="user-profile">
     <!-- Spinner -->
     <spinner v-if="isLoading" />
     <template v-else>
@@ -107,3 +107,24 @@ export default {
   }
 };
 </script>
+
+<style>
+#user-profile .info-container {
+  height: 100%;
+}
+
+#user-profile .title-container {
+  border-bottom: #cfcfcf9e solid 1px;
+  background-color: #f8f9fa;
+}
+
+#user-profile .image-container {
+  background-color: white;
+}
+
+#user-profile .image-container img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+</style>
