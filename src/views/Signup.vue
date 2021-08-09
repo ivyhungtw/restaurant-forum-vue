@@ -2,15 +2,16 @@
   <div class="container mt-5 pt-5">
     <div class="card card-body">
       <h1 class="text-center mt-3">Register</h1>
-      <form
+      <vee-form
+        :validation-schema="schema"
         action="/users/register"
         method="POST"
         class="row d-flex flex-column align-items-center"
-        @submit.prevent.stop="handleSubmit"
+        @submit="handleSubmit"
       >
         <div class="form-group col-8 mt-3">
           <label for="name">Name</label>
-          <input
+          <vee-field
             id="name"
             name="name"
             v-model="name"
@@ -21,10 +22,11 @@
             required
             autofocus
           />
+          <ErrorMessage class="text-red" name="name" />
         </div>
         <div class="form-group col-8 mt-3">
           <label for="email">Email</label>
-          <input
+          <vee-field
             id="email"
             name="email"
             v-model="email"
@@ -34,10 +36,11 @@
             autocomplete="email"
             required
           />
+          <ErrorMessage class="text-red" name="email" />
         </div>
         <div class="form-group col-8 mt-3">
           <label for="password">Password</label>
-          <input
+          <vee-field
             id="password"
             name="password"
             v-model="password"
@@ -47,10 +50,11 @@
             autocomplete="new-password"
             required
           />
+          <ErrorMessage class="text-red" name="password" />
         </div>
         <div class="form-group col-8 mt-3">
           <label for="confirmPassword">Confirm Password</label>
-          <input
+          <vee-field
             id="confirmPassword"
             name="confirmPassword"
             v-model="confirmPassword"
@@ -60,6 +64,7 @@
             autocomplete="new-password"
             required
           />
+          <ErrorMessage class="text-red" name="confirmPassword" />
         </div>
         <button type="submit" class="btn btn-primary btn-block col-6 mt-5" :disabled="isProcessing">
           Register
@@ -68,7 +73,7 @@
           Have An Account?
           <router-link :to="{ name: 'signin' }">Login</router-link>
         </p>
-      </form>
+      </vee-form>
     </div>
   </div>
 </template>
@@ -84,7 +89,13 @@ export default {
       email: '',
       password: '',
       confirmPassword: '',
-      isProcessing: false
+      isProcessing: false,
+      schema: {
+        name: 'required|min:3|max:50',
+        email: 'required|min:3|max:100|email',
+        password: 'required|min:3|max:32',
+        confirmPassword: 'passwords_mismatch:@password'
+      }
     };
   },
   methods: {

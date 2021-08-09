@@ -44,6 +44,10 @@ export default {
             throw new Error(data.errors);
           }
         } else {
+          Toast.fire({
+            icon: 'success',
+            title: 'Create a restaurant successfully!'
+          });
           this.$router.push({ name: 'admin-restaurants' });
         }
       } catch (err) {

@@ -29,6 +29,12 @@ export default createStore({
       state.isAuthenticated = false;
       state.token = '';
       localStorage.removeItem('token');
+    },
+    changeImage(state, imageUrl) {
+      state.currentUser = {
+        ...state.currentUser,
+        image: imageUrl
+      };
     }
   },
   actions: {

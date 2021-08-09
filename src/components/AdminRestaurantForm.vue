@@ -1,11 +1,11 @@
 <template>
   <!-- Spinner -->
   <spinner v-if="isLoading" />
-  <form v-else @submit.prevent.stop="submitForm" v-show="!isLoading">
+  <vee-form :validation-schema="schema" v-else @submit="submitForm" v-show="!isLoading">
     <!-- Name -->
     <div class="mb-3">
       <label class="form-label" for="name">Name <span>*</span></label>
-      <input
+      <vee-field
         id="name"
         v-model="restaurant.name"
         type="text"
@@ -14,31 +14,34 @@
         placeholder="Enter name"
         required
       />
+      <ErrorMessage class="text-red" name="name" />
     </div>
 
     <!-- Category -->
     <div class="mb-3">
       <label class="form-label" for="categoryId">Category <span>*</span></label>
-      <select
+      <vee-field
+        as="select"
         id="categoryId"
         v-model="restaurant.categoryId"
         class="form-control"
         name="categoryId"
         required
       >
-        <option value="" selected disabled>
+        <option value="" disabled>
           Choose category
         </option>
         <option v-for="category in categories" :key="category.id" :value="category.id">
           {{ category.name }}
         </option>
-      </select>
+      </vee-field>
+      <ErrorMessage class="text-red" name="categoryId" />
     </div>
 
     <!-- Tel -->
     <div class="mb-3">
       <label class="form-label" for="tel">Tel</label>
-      <input
+      <vee-field
         id="tel"
         v-model="restaurant.tel"
         type="text"
@@ -46,12 +49,13 @@
         name="tel"
         placeholder="Enter telephone number"
       />
+      <ErrorMessage class="text-red" name="tel" />
     </div>
 
     <!-- Address -->
     <div class="mb-3">
       <label class="form-label" for="address">Address <span>*</span></label>
-      <input
+      <vee-field
         id="address"
         v-model="restaurant.address"
         type="text"
@@ -60,24 +64,27 @@
         name="address"
         required
       />
+      <ErrorMessage class="text-red" name="address" />
     </div>
 
     <!-- Opening Hours -->
     <div class="mb-3">
       <label class="form-label" for="opening-hours">Opening Hours</label>
-      <input
+      <vee-field
         id="opening-hours"
         v-model="restaurant.openingHours"
         type="time"
         class="form-control"
         name="opening_hours"
       />
+      <ErrorMessage class="text-red" name="opening_hours" />
     </div>
 
     <!-- Description -->
     <div class="mb-3">
       <label class="form-label" for="description">Description <span>*</span></label>
-      <textarea
+      <vee-field
+        as="textarea"
         id="description"
         v-model="restaurant.description"
         class="form-control"
@@ -85,6 +92,7 @@
         name="description"
         required
       />
+      <ErrorMessage class="text-red" name="description" />
     </div>
 
     <!-- Image -->
@@ -97,7 +105,7 @@
         width="200"
         height="200"
       />
-      <input
+      <vee-field
         id="image"
         class="form-control"
         type="file"
@@ -105,12 +113,13 @@
         accept="image/*"
         @change="changeFile"
       />
+      <ErrorMessage class="text-red" name="image" />
     </div>
 
     <button type="submit" class="btn btn-primary" :disabled="isProcessing">
       {{ isProcessing ? 'Processing' : 'Submit' }}
     </button>
-  </form>
+  </vee-form>
 </template>
 
 <script>
@@ -144,7 +153,15 @@ export default {
       restaurant: {
         ...this.initialRestaurant
       },
-      isLoading: true
+      isLoading: true,
+      schema: {
+        name: 'required|min:3|max:50',
+        categoryId: 'category',
+        tel: 'min:9|max:13',
+        address: 'required',
+        description: 'required|min:3|max:500',
+        image: 'image'
+      }
     };
   },
   components: {
@@ -184,16 +201,26 @@ export default {
         this.restaurant.image = imageURL;
       }
     },
-    submitForm(e) {
+    submitForm(values) {
       const { name, categoryId, address, description } = this.restaurant;
+
       if (!name || !categoryId || !address || !description) {
         return Toast.fire({
           icon: 'warning',
           title: 'Please fill out all required fields.'
         });
       }
-      const form = e.target;
-      const formData = new FormData(form);
+
+      const image = values.image ? [...values.image][0] : null;
+      const restaurant = { ...this.restaurant };
+      const formData = new FormData();
+
+      formData.append('image', image);
+      for (const property in restaurant) {
+        if (property !== 'image') {
+          formData.append(property, restaurant[property]);
+        }
+      }
       return this.$emit('submit-form', formData);
     }
   },

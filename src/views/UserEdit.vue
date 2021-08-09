@@ -1,9 +1,9 @@
 <template>
   <div class="container py-5">
-    <form @submit.prevent.stop="submitForm">
+    <vee-form :validation-schema="schema" @submit="submitForm">
       <div class="mb-3">
         <label class="form-label" for="name">Name</label>
-        <input
+        <vee-field
           id="name"
           v-model="user.name"
           type="text"
@@ -12,6 +12,7 @@
           placeholder="Enter Name"
           required
         />
+        <ErrorMessage class="text-red" name="name" />
       </div>
 
       <div class="mb-3">
@@ -23,7 +24,7 @@
           width="200"
           height="200"
         />
-        <input
+        <vee-field
           id="image"
           type="file"
           name="image"
@@ -31,12 +32,13 @@
           class="form-control"
           @change="changeFile"
         />
+        <ErrorMessage class="text-red" name="image" />
       </div>
 
       <button type="submit" class="btn btn-primary" :disabled="isProcessing">
         Submit
       </button>
-    </form>
+    </vee-form>
   </div>
 </template>
 
@@ -49,7 +51,11 @@ export default {
   data() {
     return {
       user: {},
-      isProcessing: false
+      isProcessing: false,
+      schema: {
+        name: 'required|min:3|max:50',
+        image: 'image'
+      }
     };
   },
   created() {
@@ -81,7 +87,7 @@ export default {
         this.user.image = imageURL;
       }
     },
-    async submitForm(e) {
+    async submitForm(values) {
       try {
         if (!this.user.name || this.user.name.length > 25) {
           return Toast.fire({
@@ -91,8 +97,10 @@ export default {
         }
         this.isProcessing = true;
 
-        const form = e.target;
-        const formData = new FormData(form);
+        const formData = new FormData();
+        const image = values.image ? [...values.image][0] : null;
+        formData.append('image', image);
+        formData.append('name', this.user.name);
 
         const { data } = await usersAPI.update({ userId: this.user.id, formData });
 
@@ -100,7 +108,9 @@ export default {
           throw new Error(data.message);
         }
 
+        this.$store.commit('changeImage', data.image);
         this.$router.push({ name: 'user-profile', params: { id: this.currentUser.id } });
+
         return Toast.fire({
           icon: 'success',
           title: 'Update successfully!'

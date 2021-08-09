@@ -1,10 +1,11 @@
 <template>
-  <form @submit.prevent.stop="submitComment">
+  <vee-form :validation-schema="schema" @submit="submitComment">
     <div class="form-group mb-4">
       <label class="mb-2 form-label" for="text"
         >Leave your comment：(must be greater than 50 and less than 200 characters)</label
       >
-      <textarea v-model="text" class="form-control" rows="3" name="text" />
+      <vee-field as="textarea" v-model="text" class="form-control" rows="3" name="text" />
+      <ErrorMessage class="text-red" name="text" />
     </div>
     <div class="d-flex align-items-center justify-content-between">
       <button type="button" class="btn btn-link" @click="$router.back()">Back</button>
@@ -12,7 +13,7 @@
         Submit
       </button>
     </div>
-  </form>
+  </vee-form>
 </template>
 
 <script>
@@ -30,7 +31,10 @@ export default {
   data() {
     return {
       text: '',
-      isProcessing: false
+      isProcessing: false,
+      schema: {
+        text: 'required|min:50|max:200'
+      }
     };
   },
   methods: {

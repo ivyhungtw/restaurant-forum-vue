@@ -112,6 +112,10 @@ export default {
           }
         } else {
           this.$router.push({ name: 'admin-restaurants' });
+          Toast.fire({
+            icon: 'success',
+            title: 'Update the restaurant successfully!'
+          });
         }
       } catch (err) {
         this.isProcessing = false;

@@ -2,16 +2,17 @@
   <div class="container mt-5 pt-5">
     <div class="card card-body">
       <h1 class="text-center mt-3">Login</h1>
-      <form
+      <vee-form
+        :validation-schema="schema"
         action="/users/login"
         method="POST"
         class="row d-flex flex-column align-items-center"
-        @submit.prevent.stop="handlesubmit"
+        @submit="handlesubmit"
       >
         <!-- Email -->
         <div class="form-group col-8 mt-3">
           <label for="email">Email</label>
-          <input
+          <vee-field
             id="email"
             name="email"
             v-model="email"
@@ -22,11 +23,12 @@
             required
             autofocus
           />
+          <ErrorMessage class="text-red" name="email" />
         </div>
         <!-- Password -->
         <div class="form-group mt-3 col-8">
           <label for="password">Password</label>
-          <input
+          <vee-field
             id="password"
             name="password"
             v-model="password"
@@ -36,6 +38,7 @@
             placeholder="Enter Password"
             required
           />
+          <ErrorMessage class="text-red" name="password" />
         </div>
         <button type="submit" class="btn btn-primary btn-block col-6 mt-4" :disabled="isProcessing">
           Login
@@ -43,7 +46,7 @@
         <p class="lead mt-4" style="width: 300px; margin-left: 100px;">
           No Account? <router-link :to="{ name: 'signup' }">Register</router-link>
         </p>
-      </form>
+      </vee-form>
     </div>
   </div>
 </template>
@@ -57,7 +60,11 @@ export default {
     return {
       email: '',
       password: '',
-      isProcessing: false
+      isProcessing: false,
+      schema: {
+        email: 'required|email',
+        password: 'required|min:3|max:32'
+      }
     };
   },
   methods: {

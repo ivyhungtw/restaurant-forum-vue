@@ -134,3 +134,8 @@ h1,
   box-shadow: none;
   border: 1px solid #dadada;
 }
+
+/* Validation */
+.text-red {
+  color: #bd2333;
+}
