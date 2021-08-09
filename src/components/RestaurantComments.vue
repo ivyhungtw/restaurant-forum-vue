@@ -1,37 +1,39 @@
 <template>
   <div>
     <h2 class="my-4">
-      所有評論：
+      All comments：
     </h2>
 
     <div>
-      <div v-for="comment in restaurantComments" :key="comment.id">
-        <div class="people-comment-wrapper">
-          <div class="people-avatar pt-1">
-            <img :src="$filter.emptyImageFilter(comment.User.image)" alt="" />
-          </div>
-          <div class="people-comment">
-            <div class="people-comment-container">
-              <div class="people-name">
-                <router-link :to="{ name: 'user-profile', params: { id: comment.User.id } }">
-                  {{ comment.User.name }}
-                </router-link>
+      <transition-group name="fade">
+        <div v-for="comment in restaurantComments" :key="comment.id">
+          <div class="people-comment-wrapper">
+            <div class="people-avatar pt-1">
+              <img :src="$filter.emptyImageFilter(comment.User.image)" alt="" />
+            </div>
+            <div class="people-comment">
+              <div class="people-comment-container">
+                <div class="people-name">
+                  <router-link :to="{ name: 'user-profile', params: { id: comment.User.id } }">
+                    {{ comment.User.name }}
+                  </router-link>
+                </div>
+                <div class="people-saying">{{ comment.text }}</div>
+                <span
+                  v-if="currentUser.isAdmin"
+                  class="delete-btn"
+                  @click.prevent.stop="deleteComment(comment.id)"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </span>
               </div>
-              <div class="people-saying">{{ comment.text }}</div>
-              <span
-                v-if="currentUser.isAdmin"
-                class="delete-btn"
-                @click.prevent.stop="deleteComment(comment.id)"
-              >
-                <i class="fas fa-trash-alt"></i>
-              </span>
             </div>
           </div>
+          <div class="date-wrapper">
+            <div class="days-comment">- {{ $filter.fromNow(comment.createdAt) }}</div>
+          </div>
         </div>
-        <div class="date-wrapper">
-          <div class="days-comment">- {{ $filter.fromNow(comment.createdAt) }}</div>
-        </div>
-      </div>
+      </transition-group>
       <hr />
     </div>
   </div>
@@ -161,4 +163,26 @@ h3 {
   margin-left: 50px;
   margin-top: 4px;
 }
+
+/* Animation */
+.fade-enter-from {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: all 1s linear;
+}
+
+.fade-leave-to {
+  transition: all 0.5s linear;
+  opacity: 0;
+}
+
+.fade-move {
+  transition: all 0.5s linear;
+}
+
+/* .fade-leave-active {
+  position: absolute;
+} */
 </style>
