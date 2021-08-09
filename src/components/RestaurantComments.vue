@@ -5,7 +5,10 @@
     </h2>
 
     <div>
-      <transition-group name="fade">
+      <transition-group
+        enter-active-class="animate__animated animate__bounceInUp"
+        leave-active-class="animate__animated animate__fadeOut"
+      >
         <div v-for="comment in restaurantComments" :key="comment.id">
           <div class="people-comment-wrapper">
             <div class="people-avatar pt-1">
@@ -89,6 +92,10 @@ export default {
 </script>
 
 <style scoped>
+.animate__animated {
+  animation-duration: 1s;
+}
+
 h2.my-4 {
   margin-bottom: 1rem !important;
   font-size: 18px;
@@ -163,26 +170,4 @@ h3 {
   margin-left: 50px;
   margin-top: 4px;
 }
-
-/* Animation */
-.fade-enter-from {
-  opacity: 0;
-}
-
-.fade-enter-active {
-  transition: all 1s linear;
-}
-
-.fade-leave-to {
-  transition: all 0.5s linear;
-  opacity: 0;
-}
-
-.fade-move {
-  transition: all 0.5s linear;
-}
-
-/* .fade-leave-active {
-  position: absolute;
-} */
 </style>
