@@ -9,7 +9,7 @@
     </div>
     <div class="d-flex align-items-center justify-content-between">
       <button type="button" class="btn btn-link" @click="$router.back()">Back</button>
-      <button type="submit" class="btn btn-primary mr-0" :disabled="isProcessing">
+      <button type="submit" class="btn btn-red mr-0" :disabled="isProcessing">
         Submit
       </button>
     </div>

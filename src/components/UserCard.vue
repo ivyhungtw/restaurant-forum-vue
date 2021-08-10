@@ -24,7 +24,7 @@
         <button
           v-else
           type="button"
-          class="btn btn-primary"
+          class="btn btn-red"
           @click.prevent.stop="follow(user.id)"
           :disabled="isProcessing"
         >
@@ -60,10 +60,7 @@
           <span class="badge bg-secondary">followers：{{ user.followerCount || 0 }}</span>
         </div>
         <div class=" d-flex justify-content-center mt-2">
-          <router-link
-            :to="{ name: 'user-profile', params: { id: user.id } }"
-            class="btn btn-primary"
-          >
+          <router-link :to="{ name: 'user-profile', params: { id: user.id } }" class="btn btn-red">
             Profile
           </router-link>
         </div>

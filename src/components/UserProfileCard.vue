@@ -25,7 +25,7 @@
     <div v-if="currentUser.id === userProfile.id">
       <router-link
         :to="{ name: 'user-profile-edit', params: { id: currentUser.id } }"
-        class="btn btn-primary"
+        class="btn btn-red"
         >Edit</router-link
       >
     </div>
@@ -38,12 +38,7 @@
       >
         Unfollow
       </button>
-      <button
-        v-else
-        type="button"
-        class="btn btn-primary"
-        @click.stop.prevent="follow(userProfile.id)"
-      >
+      <button v-else type="button" class="btn btn-red" @click.stop.prevent="follow(userProfile.id)">
         Follow
       </button>
     </div>

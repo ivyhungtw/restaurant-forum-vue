@@ -66,7 +66,7 @@
           />
           <ErrorMessage class="text-red" name="confirmPassword" />
         </div>
-        <button type="submit" class="btn btn-primary btn-block col-6 mt-5" :disabled="isProcessing">
+        <button type="submit" class="btn btn-red btn-block col-6 mt-5" :disabled="isProcessing">
           Register
         </button>
         <p class="lead mt-4" style="width: 300px; margin-left: 72px;">

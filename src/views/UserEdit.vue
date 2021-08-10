@@ -35,7 +35,7 @@
         <ErrorMessage class="text-red" name="image" />
       </div>
 
-      <button type="submit" class="btn btn-primary" :disabled="isProcessing">
+      <button type="submit" class="btn btn-red" :disabled="isProcessing">
         Submit
       </button>
     </vee-form>

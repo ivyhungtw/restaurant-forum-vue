@@ -28,7 +28,7 @@
       </div>
       <p>{{ restaurant.description }}</p>
       <router-link
-        class="btn btn-primary btn-border me-2"
+        class="btn btn-red btn-border me-2"
         :to="{ name: 'restaurant-dashboard', params: { id: restaurant.id } }"
         >Dashboard</router-link
       >
@@ -44,7 +44,7 @@
       <button
         v-else
         type="button"
-        class="btn btn-primary btn-border me-2"
+        class="btn btn-red btn-border me-2"
         @click.prevent.stop="addFavorite(restaurant.id)"
       >
         Add to Fav
@@ -60,7 +60,7 @@
       <button
         v-else
         type="button"
-        class="btn btn-primary like me-2"
+        class="btn btn-red like me-2"
         @click.prevent.stop="like(restaurant.id)"
       >
         Like

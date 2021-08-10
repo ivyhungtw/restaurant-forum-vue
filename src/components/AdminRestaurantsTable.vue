@@ -14,7 +14,7 @@
           Name
         </th>
         <th scope="col" width="300">
-          操作
+          Action
         </th>
       </tr>
     </thead>

@@ -1,13 +1,13 @@
 <template>
   <div class="container py-5">
-    <!-- 後台導覽頁籤 AdminNav -->
+    <!-- AdminNav -->
     <admin-nav />
 
-    <router-link :to="{ name: 'admin-restaurant-new' }" class="btn btn-primary mb-4">
+    <router-link :to="{ name: 'admin-restaurant-new' }" class="btn btn-red mb-4">
       New Restaurant
     </router-link>
 
-    <!-- 後台餐廳列表 AdminRestaurantsTable -->
+    <!-- AdminRestaurantsTable -->
     <admin-restaurants-table />
   </div>
 </template>

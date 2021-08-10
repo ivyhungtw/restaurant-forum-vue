@@ -38,7 +38,7 @@
         </div>
       </div>
       <hr />
-      <button type="button" class="btn btn-link" @click="$router.back()">回上一頁</button>
+      <button type="button" class="btn btn-link" @click="$router.back()">Back</button>
     </template>
   </div>
 </template>

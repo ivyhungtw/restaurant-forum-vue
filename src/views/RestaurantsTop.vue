@@ -19,6 +19,7 @@
         v-for="restaurant in restaurants"
         :key="restaurant.id"
         :initial-restaurant="restaurant"
+        class="mb-4"
       />
     </template>
   </div>

@@ -50,7 +50,7 @@ a:hover {
 
 .btn-border,
 .btn:hover,
-.btn-primary:hover {
+.btn-red:hover {
   background-color: #bd2333;
   color: white;
 
@@ -62,16 +62,16 @@ a:hover {
   box-shadow: none;
 }
 
-.btn-primary:not(:disabled):not(.disabled).active,
-.btn-primary:not(:disabled):not(.disabled):active,
-.show > .btn-primary.dropdown-toggle {
+.btn-red:not(:disabled):not(.disabled).active,
+.btn-red:not(:disabled):not(.disabled):active,
+.show > .btn-red.dropdown-toggle {
   border: 2px solid #bd2333;
   color: #bd2333;
   background: transparent;
 }
 
-.btn-primary.disabled,
-.btn-primary:disabled {
+.btn-red.disabled,
+.btn-red:disabled {
   color: #fff;
   background-color: #bd2333;
   border-color: #bd2333;
@@ -138,4 +138,9 @@ h1,
 /* Validation */
 .text-red {
   color: #bd2333;
+}
+
+/* Admin */
+.table-dark th {
+  color: beige;
 }

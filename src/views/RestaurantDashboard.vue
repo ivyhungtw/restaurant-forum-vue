@@ -19,7 +19,7 @@
       </ul>
 
       <button type="button" class="btn btn-link" @click="$router.back()">
-        回上一頁
+        Back
       </button>
     </template>
   </div>
