@@ -1,24 +1,40 @@
 <template>
   <div class="card">
     <div class="card-header">
-      最新評論
+      Latest Comments
     </div>
     <div class="card-body">
-      <div v-for="comment in comments" :key="comment.id">
-        <template v-if="comment.Restaurant && comment.text">
-          <h4>
-            <router-link :to="{ name: 'restaurant', params: { id: comment.Restaurant.id } }">
-              {{ comment.Restaurant.name }}
-            </router-link>
-          </h4>
-          <p>{{ comment.text }}</p>
-          by
+      <div
+        v-for="comment in comments"
+        :key="comment.id"
+        class="d-flex align-items-baseline border-bottom py-3"
+      >
+        <!-- image -->
+        <span class="me-2">
           <router-link :to="{ name: 'user-profile', params: { id: comment.User.id } }">
-            {{ comment.User.name }}
+            <img :src="comment.User.image" class="avatar" alt="" width="32" height="32" />
           </router-link>
-          {{ $filter.fromNow(comment.createdAt) }}
-          <hr />
-        </template>
+        </span>
+        <!-- comment -->
+        <div class="d-flex flex-column ">
+          <!-- title -->
+          <div class="d-flex">
+            <div>
+              <router-link :to="{ name: 'user-profile', params: { id: comment.User.id } }">
+                {{ comment.User.name }}
+              </router-link>
+              created a comment on
+              <router-link :to="{ name: 'restaurant', params: { id: comment.Restaurant.id } }">
+                {{ comment.Restaurant.name }}
+              </router-link>
+            </div>
+          </div>
+          <!-- box -->
+          <div class="rounded-2 p-2 mt-2 bg-light mb-1">
+            <p class="card-text">{{ comment.text }}</p>
+          </div>
+          - {{ $filter.fromNow(comment.createdAt) }}
+        </div>
       </div>
     </div>
   </div>
@@ -34,3 +50,27 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.card-body {
+  padding-top: 0;
+}
+
+.avatar {
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  line-height: 1;
+  overflow: hidden;
+  vertical-align: middle;
+  object-fit: cover;
+}
+
+.card-text {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+}
+</style>

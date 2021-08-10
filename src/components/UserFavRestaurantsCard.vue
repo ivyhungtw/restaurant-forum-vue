@@ -7,7 +7,7 @@
       background-color: #f8f9fa;"
       >
         <div>
-          <strong>{{ restaurants.length }}</strong> 收藏的餐廳
+          <strong>{{ restaurants.length }}</strong> saved restaurants
         </div>
       </div>
       <div class="image-container col-12 p-4 d-flex flex-wrap">

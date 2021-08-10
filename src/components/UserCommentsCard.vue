@@ -3,7 +3,7 @@
     <div class="info-container border">
       <div class="title-container px-4 py-3">
         <div>
-          <strong>{{ restaurants.length }}</strong> 已評論餐廳
+          <strong>{{ restaurants.length }}</strong> commented restaurants
         </div>
       </div>
       <div class="image-container col-12 p-4 d-flex flex-wrap">

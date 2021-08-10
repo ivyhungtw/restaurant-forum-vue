@@ -15,12 +15,10 @@
       <div class="row">
         <!-- Latest Restaurants -->
         <div class="col-md-6">
-          <h3>Latest Restaurants</h3>
           <latest-restaurants :restaurants="restaurants" />
         </div>
         <!-- Latest Comments-->
         <div class="col-md-6">
-          <h3>Latest Comments</h3>
           <latest-comments :comments="comments" />
         </div>
       </div>

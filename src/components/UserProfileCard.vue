@@ -10,10 +10,10 @@
       <h3>{{ userProfile.name }}</h3>
       <p>{{ userProfile.email }}</p>
       <div>
-        <strong>{{ userProfile.commentRestaurantsLength }}</strong> 已評論餐廳
+        <strong>{{ userProfile.commentRestaurantsLength }}</strong> commented restaurants
       </div>
       <div>
-        <strong>{{ userProfile.favRestaurantsLength }}</strong> 收藏的餐廳
+        <strong>{{ userProfile.favRestaurantsLength }}</strong> saved restaurants
       </div>
       <div>
         <strong>{{ userProfile.followingsLength }}</strong> followings

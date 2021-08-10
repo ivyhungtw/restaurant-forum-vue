@@ -234,4 +234,8 @@ export default {
 label span {
   color: rgb(216, 3, 3);
 }
+
+img {
+  object-fit: cover;
+}
 </style>

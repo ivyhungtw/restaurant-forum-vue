@@ -13,7 +13,7 @@
       <div class="col-md-8">
         <div class="card-body">
           <h5 class="card-title">
-            Mrs. Mckenzie Johnston
+            {{ restaurant.name }}
           </h5>
           <span class="badge bg-secondary">Saved：{{ restaurant.favCount || 0 }}</span>
           <p class="card-text">
